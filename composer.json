@@ -20,7 +20,7 @@
       "maximilienGilet\\NotificationBundle" : ""
     }
   },
-  "target-dir" : "Mgilet/NotificationBundle",
+  "target-dir" : "maximilienGilet/notification-bundle",
   "repositories" : [{
   }],
   "extra" : {
