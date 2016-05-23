@@ -1,5 +1,5 @@
 {
-  "name" : "maximilienGilet/notification-bundle",
+  "name" : "mgilet/notification-bundle",
   "license": "MIT",
   "description" : "A simple Symfony 3 bundle for user notifications",
   "type" : "symfony-bundle",
@@ -16,11 +16,8 @@
     "doctrine/doctrine-bundle": "*"
   },
   "autoload" : {
-    "psr-0" : {
-      "Mgilet\\NotificationBundle" : ""
-    }
+    "psr-4": { "Mgilet\\NotificationBundle\\": "" }
   },
-  "target-dir" : "",
   "repositories" : [{
   }],
   "extra" : {
