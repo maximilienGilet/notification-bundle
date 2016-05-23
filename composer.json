@@ -17,10 +17,10 @@
   },
   "autoload" : {
     "psr-0" : {
-      "maximilienGilet\\NotificationBundle" : ""
+      "Mgilet\\NotificationBundle" : ""
     }
   },
-  "target-dir" : "maximilienGilet/notification-bundle",
+  "target-dir" : "",
   "repositories" : [{
   }],
   "extra" : {
