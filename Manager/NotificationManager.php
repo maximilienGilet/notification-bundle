@@ -2,8 +2,7 @@
 
 namespace Mgilet\NotificationBundle\Manager;
 
-
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Mgilet\NotificationBundle\Model\AbstractNotification;
 use Mgilet\NotificationBundle\Model\UserNotificationInterface;
 
@@ -11,16 +10,21 @@ class NotificationManager
 {
 
     private $om;
+    private $user;
+    private $notification;
 
     /**
      * NotificationManager constructor.
-     * @param Registry $om
-     * @param $class
+     * @param EntityManager $om
+     * @param $user
+     * @param $notification
+     * @internal param $class
      */
-    public function __construct(Registry $om, $class)
+    public function __construct(EntityManager $om, $user, $notification)
     {
         $this->om = $om;
-        $this->class = $class;
+        $this->user = $user;
+        $this->notification = $notification;
     }
 
     /**
@@ -32,10 +36,12 @@ class NotificationManager
      */
     public function createNotification($subject, $message = null, $link = null)
     {
-        $notification = new $this->class;
-        $notification->setSubject($subject)
+        $notification = new $this->notification;
+        $notification
+            ->setSubject($subject)
             ->setMessage($message)
-            ->setLink($link);
+            ->setLink($link)
+            ->isSeen(false);
 
         return $notification;
     }
@@ -44,6 +50,8 @@ class NotificationManager
      * Add a notification to a user
      * @param UserNotificationInterface $user
      * @param AbstractNotification $notification
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function addNotification(UserNotificationInterface $user, AbstractNotification $notification)
     {
@@ -55,6 +63,8 @@ class NotificationManager
     /**
      * Delete a notification
      * @param AbstractNotification $notification
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function removeNotification(AbstractNotification $notification)
     {
@@ -66,6 +76,8 @@ class NotificationManager
     /**
      * Mark a notification as seen
      * @param AbstractNotification $notification
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function markAsSeen(AbstractNotification $notification)
     {
@@ -79,9 +91,19 @@ class NotificationManager
      * @param UserNotificationInterface $user
      * @return AbstractNotification[] list of notifications
      */
-    public function getUserNotifications(UserNotificationInterface $user)
+    public function getUserNotifications($user)
     {
-        return $this->om->getRepository($this->class)->findAllByUser($user);
+        return $this->om->getRepository($this->notification)->findBy(array('user' => $user));
+    }
+
+    /**
+     * Get notification count for a user
+     * @param UserNotificationInterface $user
+     * @return int
+     */
+    public function getNotificationCount($user)
+    {
+        return count($this->om->getRepository($this->notification)->findBy(array('user' => $user)));
     }
 
 

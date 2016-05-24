@@ -43,6 +43,11 @@ abstract class AbstractNotification
      */
     protected $seen;
 
+    public function __construct()
+    {
+        $this->seen = false;
+    }
+
     /**
      * @return int Notification Id
      */
