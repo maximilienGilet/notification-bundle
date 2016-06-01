@@ -106,5 +106,18 @@ class NotificationManager
         return count($this->om->getRepository($this->notification)->findBy(array('user' => $user)));
     }
 
+    /**
+     * Get unread notification count for a user
+     * @param UserNotificationInterface $user
+     * @return int
+     */
+    public function getUnreadNotificationCount($user)
+    {
+        return count($this->om->getRepository($this->notification)->findBy(array(
+            'user' => $user,
+            'seen' => false
+        )));
+    }
+
 
 }
