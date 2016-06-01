@@ -1,0 +1,38 @@
+{% if mgilet_unread_notification_count() > 0 %}
+<li class="btn-warning active">
+    {% else %}
+<li>
+    {% endif %}
+    {#TODO: Add translations #}
+    <a href="#!" id="notificationDropdown" data-toggle="collapse" data-target="#notification-menu"
+       aria-haspopup="true">{{ mgilet_unread_notification_count() }}</a>
+    <div id="notification-menu" class="notification-menu collapse" aria-labelledby="notificationDropdown">
+        <ul class="well no-padding">
+            <li style="padding: 10px;">
+                <b class="text-muted">Notifications</b>
+                <a href="" class="pull-right">Tout marquer comme lu</a>
+            </li>
+            <hr class="no-margin">
+            <div class="scrollable-menu">
+                {% for notification in notifications %}
+                    {% if notification.seen %}
+                        <li class="muted">
+                        <a class="text-muted" href="{{ notification.link }}">
+                    {% else %}
+                        <li>
+                        <a href="{{ notification.link }}">
+                    {% endif %}
+                        <div><b>{{ notification.subject }}</b></div>
+                        <div>{{ notification.message }}</div>
+                    </a>
+                </li>
+                {% endfor %}
+            </div>
+            <li class="text-center">
+                <hr class="no-margin">
+                <a href="">Toutes mes notifications</a>
+            </li>
+        </ul>
+    </div>
+</li>
+<link rel="stylesheet" href="{{ asset('bundles/mgiletnotification/css/mgilet_notification.css') }}">

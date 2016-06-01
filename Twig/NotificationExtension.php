@@ -34,7 +34,14 @@ class NotificationExtension extends Twig_Extension
                 'is_safe' => array('html'),
                 'needs_environment' => true
             )),
-            new \Twig_SimpleFunction('mgilet_notification_count',array($this, 'countNotifications'), array(
+            new \Twig_SimpleFunction('mgilet_notification_dropdown_render', array($this, 'renderDropdownNotifications'), array(
+                'is_safe' => array('html'),
+                'needs_environment' => true
+            )),
+            new \Twig_SimpleFunction('mgilet_notification_count', array($this, 'countNotifications'), array(
+                'is_safe' => array('html')
+            )),
+            new \Twig_SimpleFunction('mgilet_unread_notification_count', array($this, 'countUnreadNotifications'), array(
                 'is_safe' => array('html')
             ))
         );
@@ -58,10 +65,26 @@ class NotificationExtension extends Twig_Extension
         );
     }
 
+    public function renderDropdownNotifications(\Twig_Environment $twig, $user = null)
+    {
+        $user = $this->getUser($user);
+        $notifications = $this->notificationManager->getUserNotifications($user);
+
+        return $twig->render('MgiletNotificationBundle::notification_dropdown.html.twig', array(
+            'notifications' => $notifications
+        ));
+    }
+
     public function countNotifications($user = null)
     {
         $user = $this->getUser($user);
         return $this->notificationManager->getNotificationCount($user);
+    }
+
+    public function countUnreadNotifications($user = null)
+    {
+        $user = $this->getUser($user);
+        return $this->notificationManager->getUnreadNotificationCount($user);
     }
 
     /**
