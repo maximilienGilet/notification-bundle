@@ -27,7 +27,7 @@ __1.0 Beta roadmap :__
 - Controller : 10%
 - Twig Extensions : 100%
 - Views : 98%
-- Translations : 0%
+- Translations : 100% - [ de, en, es, fr, it ] (ask for more translations)
 - Testing : 0%
 - Documentation : 0%
 
