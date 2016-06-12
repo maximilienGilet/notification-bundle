@@ -16,14 +16,16 @@ __1.0 Beta (not released yet) :__
 - Easy setup
 - No bloated dependencies (little requirements)
 
+Notice: only Doctrine ORM is supported for now
+
 ## Current status
 
 __1.0 Beta roadmap :__
 
 - Basic Symfony bundle declaration : 100%
-- Model (Entities) : 50% (multiple ORM support yet to be done)
-- DependencyInjection : 50%
-- Manager : 80%
+- Model (Entities) : 100%
+- DependencyInjection : 100%
+- Manager : 98%
 - Controller : 10%
 - Twig Extensions : 100%
 - Views : 98%
