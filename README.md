@@ -28,12 +28,12 @@ __1.0 Beta roadmap :__
 - Basic Symfony bundle declaration : 100%
 - Model (Entities) : 100%
 - DependencyInjection : 100%
-- Manager : 98%
-- Controller : 10%
+- Manager : 100%
+- Controller : 100%
 - Twig Extensions : 100%
-- Views : 98%
+- Views : 100%
 - Translations : 100% - ( de, en, es, fr, it ) (ask for more)
-- Testing : 0%
+- Testing : 20%
 - Documentation : 0%
 
 ## Licence
