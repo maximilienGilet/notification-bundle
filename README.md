@@ -1,5 +1,8 @@
 # notification-bundle
 A simple Symfony 3 bundle for user notifications
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48/big.png)](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48)
+
 * Symfony support :
   * 2.7.x
   * 2.8.x
