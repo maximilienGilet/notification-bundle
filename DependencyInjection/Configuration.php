@@ -2,20 +2,11 @@
 
 namespace Mgilet\NotificationBundle\DependencyInjection;
 
-use AppBundle\AppBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use AppBundle\Entity\User;
-use AppBundle\Entity\Notification;
 
 class Configuration implements ConfigurationInterface
 {
-
-//    /** @var string */
-//    const USER_ENTITY = User::class;
-//
-//    /** @var string */
-//    const NOTIFICATION_ENTITY = Notification::class;
 
     /**
      * {@inheritDoc}
