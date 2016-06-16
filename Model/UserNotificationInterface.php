@@ -2,7 +2,6 @@
 
 namespace Mgilet\NotificationBundle\Model;
 
-
 interface UserNotificationInterface
 {
 

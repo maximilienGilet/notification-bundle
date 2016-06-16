@@ -4,54 +4,121 @@ namespace Mgilet\NotificationBundle\Twig;
 
 use Mgilet\NotificationBundle\Manager\NotificationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Twig_Extension;
 
 /**
  * Twig extension to display notifications
  **/
-class NotificationExtension extends \Twig_Extension
+class NotificationExtension extends Twig_Extension
 {
     protected $notificationManager;
     protected $storage;
+    protected $twig;
 
     /**
      * NotificationExtension constructor.
      * @param NotificationManager $notificationManager
      * @param TokenStorage $storage
+     * @param \Twig_Environment $twig
      */
-    public function __construct(NotificationManager $notificationManager, TokenStorage $storage)
-        // service security.token_storage
+    public function __construct(NotificationManager $notificationManager, TokenStorage $storage, \Twig_Environment $twig)
     {
         $this->notificationManager = $notificationManager;
         $this->storage = $storage;
+        $this->twig = $twig;
     }
 
 
-    public function getFilters()
+    public function getFunctions()
     {
-        new \Twig_SimpleFunction('notification', array($this, 'renderNotification'), array(
-            'is_safe' => array('html'),
-            'needs_environment' => true
-        ));
+        return array(
+            new \Twig_SimpleFunction('mgilet_notification_render', array($this, 'render'), array(
+                'is_safe' => array('html')
+            )),
+            new \Twig_SimpleFunction('mgilet_notification_count', array($this, 'countNotifications'), array(
+                'is_safe' => array('html')
+            )),
+            new \Twig_SimpleFunction('mgilet_unseen_notification_count', array($this, 'countUnseenNotifications'), array(
+                'is_safe' => array('html')
+            ))
+        );
+    }
+
+    public function render($options = array(), $user = null)
+    {
+        if( !array_key_exists('seen',$options)) {
+            $options['seen'] = true;
+        }
+        if ($options['display'] === 'list') {
+            return $this->renderNotifications($user, $options['seen']);
+        }
+        if ($options['display'] === 'dropdown') {
+            return $this->renderDropdownNotifications($user, $options['seen']);
+        }
+        return null;
     }
 
     /**
      * Render notifications for a user
-     * @param \Twig_Environment $twig
      * @param null $user
+     * @param bool $seen
      * @return string
+     * @internal param \Twig_Environment $twig
      */
-    public function renderNotification(\Twig_Environment $twig, $user = null)
+    public function renderNotifications($user = null, $seen = true)
     {
-        if (!$user) {
-            $user = $this->storage->getToken()->getUser();
+        $user = $this->getUser($user);
+        if ($seen) {
+            $notifications = $this->notificationManager->getUserNotifications($user);
+        } else {
+            $notifications = $this->notificationManager->getUnseenUserNotifications($user);
         }
-        $notifications = $this->notificationManager->getUserNotifications($user);
 
-        return $twig->render('NotificationBundle::notifications.html.twig',
+        return $this->twig->render('MgiletNotificationBundle::notifications.html.twig',
             array(
                 'notifications' => $notifications
             )
         );
+    }
+
+    public function renderDropdownNotifications($user = null, $seen = true)
+    {
+        $user = $this->getUser($user);
+        if ($seen) {
+            $notifications = $this->notificationManager->getUserNotifications($user);
+        } else {
+            $notifications = $this->notificationManager->getUnseenUserNotifications($user);
+        }
+
+        return $this->twig->render('MgiletNotificationBundle::notification_dropdown.html.twig', array(
+            'notifications' => $notifications
+        ));
+    }
+
+    public function countNotifications($user = null)
+    {
+        $user = $this->getUser($user);
+        return $this->notificationManager->getNotificationCount($user);
+    }
+
+    public function countUnseenNotifications($user = null)
+    {
+        $user = $this->getUser($user);
+        return $this->notificationManager->getUnseenNotificationCount($user);
+    }
+
+    /**
+     * If no user is specified return current user
+     * @param null $user
+     * @return mixed user
+     */
+    private function getUser($user = null)
+    {
+        if (!$user) {
+            return $this->storage->getToken()->getUser();
+        }
+
+        return $user;
     }
 
     /**
@@ -59,6 +126,6 @@ class NotificationExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'notification_extension';
+        return 'mgilet_notification';
     }
 }

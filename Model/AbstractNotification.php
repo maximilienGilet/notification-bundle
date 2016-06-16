@@ -21,6 +21,12 @@ abstract class AbstractNotification
     protected $id;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    protected $date;
+
+    /**
      * @var string
      * @ORM\Column(name="subject", type="string", nullable=false)
      */
@@ -43,12 +49,37 @@ abstract class AbstractNotification
      */
     protected $seen;
 
+    public function __construct()
+    {
+        $this->seen = false;
+        $this->date = new \DateTime();
+    }
+
     /**
      * @return int Notification Id
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return $this
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+        
+        return $this;
     }
 
     /**
@@ -114,7 +145,6 @@ abstract class AbstractNotification
      */
     public function isSeen()
     {
-        ;
         return $this->seen;
     }
 
