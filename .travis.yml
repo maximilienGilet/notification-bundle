@@ -13,6 +13,12 @@ env:
 
 install:
    - composer require symfony/framework-bundle:${SYMFONY_VERSION}
+   # fix ipv6 issue that prevented composer requests and resulted in failing builds
+   - sudo sh -c "echo 'precedence ::ffff:0:0/96  100' >> /etc/gai.conf"
+   # updates composer on travis
+   - travis_retry composer self-update
+   # clear composer cache, might speed up finding new tags
+   - travis_retry composer clear-cache
 
 before_script:
   - composer install --dev
