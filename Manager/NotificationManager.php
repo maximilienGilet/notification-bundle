@@ -6,6 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Mgilet\NotificationBundle\Model\AbstractNotification;
 use Mgilet\NotificationBundle\Model\UserNotificationInterface;
 
+/**
+ * Class NotificationManager
+ * Manager for notifications
+ * @package Mgilet\NotificationBundle\Manager
+ */
 class NotificationManager
 {
 
@@ -30,6 +35,7 @@ class NotificationManager
     }
 
     /**
+     * Get a notification by it's id
      * @param $id
      * @return AbstractNotification
      */
@@ -104,6 +110,7 @@ class NotificationManager
     }
 
     /**
+     * Mark all notifications as seen
      * @param $notifications
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -126,6 +133,7 @@ class NotificationManager
     }
 
     /**
+     * Get all unseen notifications for a user
      * @param UserNotificationInterface $user
      * @return AbstractNotification[]
      */
@@ -148,7 +156,7 @@ class NotificationManager
     }
 
     /**
-     * Get unread notification count for a user
+     * Get unseen notification count for a user
      * @param UserNotificationInterface $user
      * @return int
      */

@@ -7,6 +7,11 @@ use AppBundle\Entity\Notification;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+/**
+ * Class Configuration
+ * Defining the DependencyInjection parameters for this bundle
+ * @package Mgilet\NotificationBundle\DependencyInjection
+ */
 class Configuration implements ConfigurationInterface
 {
 

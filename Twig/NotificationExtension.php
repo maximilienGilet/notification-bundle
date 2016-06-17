@@ -28,7 +28,9 @@ class NotificationExtension extends Twig_Extension
         $this->twig = $twig;
     }
 
-
+    /**
+     * @return array available Twig functions
+     */
     public function getFunctions()
     {
         return array(
@@ -44,6 +46,12 @@ class NotificationExtension extends Twig_Extension
         );
     }
 
+    /**
+     * Rendering notifications in Twig
+     * @param array $options
+     * @param null $user
+     * @return null|string
+     */
     public function render($options = array(), $user = null)
     {
         if( !array_key_exists('seen',$options)) {
@@ -81,6 +89,12 @@ class NotificationExtension extends Twig_Extension
         );
     }
 
+    /**
+     * Render notifications for a user in a dropdown (Bootstrap 3 highly recommended)
+     * @param null $user
+     * @param bool $seen
+     * @return mixed
+     */
     public function renderDropdownNotifications($user = null, $seen = true)
     {
         $user = $this->getUser($user);
@@ -95,12 +109,22 @@ class NotificationExtension extends Twig_Extension
         ));
     }
 
+    /**
+     * Display the total count of notifications for this user
+     * @param null $user
+     * @return int
+     */
     public function countNotifications($user = null)
     {
         $user = $this->getUser($user);
         return $this->notificationManager->getNotificationCount($user);
     }
 
+    /**
+     * Display the count of unseen notifications for this user
+     * @param null $user
+     * @return int
+     */
     public function countUnseenNotifications($user = null)
     {
         $user = $this->getUser($user);

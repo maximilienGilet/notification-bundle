@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class AbstractNotification
+ * Notifications defined in your app must implement this class
  * @package maximilienGilet\NotificationBundle\Model
  * @ORM\MappedSuperclass()
  */
@@ -45,13 +46,16 @@ abstract class AbstractNotification
 
     /**
      * @var boolean
-     * @ORM\Column(name="seen", type="boolean")
+     * @ORM\Column(name="is_seen", type="boolean")
      */
-    protected $seen;
+    protected $isSeen;
 
+    /**
+     * AbstractNotification constructor.
+     */
     public function __construct()
     {
-        $this->seen = false;
+        $this->isSeen = false;
         $this->date = new \DateTime();
     }
 
@@ -91,7 +95,7 @@ abstract class AbstractNotification
     }
 
     /**
-     * @param $subject string Notification subject
+     * @param string $subject Notification subject
      * @return $this
      */
     public function setSubject($subject)
@@ -110,7 +114,7 @@ abstract class AbstractNotification
     }
 
     /**
-     * @param $message string Notification message
+     * @param string $message Notification message
      * @return $this
      */
     public function setMessage($message)
@@ -129,7 +133,7 @@ abstract class AbstractNotification
     }
 
     /**
-     * @param $link string Link to redirect the user
+     * @param string $link Link to redirect the user
      * @return $this
      */
     public function setLink($link)
@@ -145,16 +149,16 @@ abstract class AbstractNotification
      */
     public function isSeen()
     {
-        return $this->seen;
+        return $this->isSeen;
     }
 
     /**
-     * @param $seen boolean Seen status of the notification
+     * @param boolean $isSeen Seen status of the notification
      * @return $this
      */
-    public function setSeen($seen)
+    public function setSeen($isSeen)
     {
-        $this->seen = $seen;
+        $this->isSeen = $isSeen;
 
         return $this;
     }

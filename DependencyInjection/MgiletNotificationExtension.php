@@ -7,8 +7,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
+/**
+ * Class MgiletNotificationExtension
+ * Load configuration for the service
+ * @package Mgilet\NotificationBundle\DependencyInjection
+ */
 class MgiletNotificationExtension extends Extension
 {
+    /**
+     * @param array $configs
+     * @param ContainerBuilder $container
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();

@@ -12,12 +12,9 @@
     max-height: 50vh;
     overflow-x: hidden;
     margin: 0;
-    /*padding-right: 0;*/
-    /*padding:0;*/
 }
 
 .scrollable-menu a {
-    /*color: #333;*/
     text-decoration: none;
 }
 

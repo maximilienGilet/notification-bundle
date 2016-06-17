@@ -5,7 +5,9 @@ namespace Mgilet\NotificationBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * maximilienGiletNotificationBundle
+ * MgiletNotificationBundle
+ *
+ * A simple Symfony 3 bundle for user notifications
  *
  * @author    Maximilien Gilet <maximilien248@gmail.com>
  * @license   http://opensource.org/licenses/MIT The MIT License

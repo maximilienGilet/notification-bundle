@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Class NotificationController
+ * the base controller for notifications
  */
 class NotificationController extends Controller
 {
