@@ -34,7 +34,7 @@ __1.0 Beta roadmap :__
 - Views : 100%
 - Translations : 100% - ( de, en, es, fr, it ) (ask for more)
 - Testing : 20%
-- Documentation : 0%
+- Documentation : 100%
 
 ## Licence
 MIT
