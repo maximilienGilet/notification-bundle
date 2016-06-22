@@ -82,7 +82,7 @@ class NotificationExtension extends Twig_Extension
             $notifications = $this->notificationManager->getUnseenUserNotifications($user);
         }
 
-        return $this->twig->render('MgiletNotificationBundle::notifications.html.twig',
+        return $this->twig->render('MgiletNotificationBundle::notification_list.html.twig',
             array(
                 'notifications' => $notifications
             )
