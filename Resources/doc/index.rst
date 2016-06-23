@@ -192,6 +192,25 @@ Here is a sample configuration::
 
     }
 
+
+Updating Doctrine
+~~~~~~~~~~~~~~~~~
+
+To finish the installation, don't forget to update your schema:
+
+**Symfony 2.x**
+
+.. code-block:: bash
+
+    $ php app/console doctrine:schema:update --force
+
+**Symfony 3.x**
+
+.. code-block:: bash
+
+    $ php bin/console doctrine:schema:update --force
+
+
 That's it ! You can now use the bundle !
 
 Basic usage :
