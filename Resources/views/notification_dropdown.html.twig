@@ -9,7 +9,7 @@
         <ul class="well no-padding list-unstyled">
             <li style="padding: 10px;"><b
                         class="text-muted">{{ 'notifications'|trans({},'MgiletNotificationBundle') }}</b>
-                <a id="notification-MarkAllAsSeen" href="{{ path('notification_mark_all_as_seen') }}" class="pull-right">{{ 'mark_all_as_seen'|trans({},'MgiletNotificationBundle') }}</a>
+                <a id="notification-MarkAllAsSeen" href="{{ path('notification_mark_all_as_seen') }}" class="no-margin btn btn-sm pull-right">{{ 'mark_all_as_seen'|trans({},'MgiletNotificationBundle') }}</a>
             </li>
             <hr class="no-margin">
             <div class="scrollable-menu">
@@ -38,7 +38,7 @@
             </div>
             <li class="text-center">
                 <hr class="no-margin">
-                <a href="{{ path('notifications_list') }}">{{ 'all_notifications'|trans({},'MgiletNotificationBundle') }}</a>
+                <a class="no-margin btn btn-sm btn-block" href="{{ path('notifications_list') }}">{{ 'all_notifications'|trans({},'MgiletNotificationBundle') }}</a>
             </li>
         </ul>
     </div>
