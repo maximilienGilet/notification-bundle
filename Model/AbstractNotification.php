@@ -46,9 +46,9 @@ abstract class AbstractNotification
 
     /**
      * @var boolean
-     * @ORM\Column(name="is_seen", type="boolean")
+     * @ORM\Column(name="seen", type="boolean")
      */
-    protected $isSeen;
+    protected $seen;
 
     /**
      * AbstractNotification constructor.
@@ -149,7 +149,7 @@ abstract class AbstractNotification
      */
     public function isSeen()
     {
-        return $this->isSeen;
+        return $this->seen;
     }
 
     /**
@@ -158,7 +158,7 @@ abstract class AbstractNotification
      */
     public function setSeen($isSeen)
     {
-        $this->isSeen = $isSeen;
+        $this->seen = $isSeen;
 
         return $this;
     }
