@@ -129,7 +129,7 @@ class NotificationManager
      */
     public function getUserNotifications($user)
     {
-        return $this->repository->findBy(array('user' => $user));
+        return $this->repository->findBy(array('user' => $user),array('date' => 'DESC'));
     }
 
     /**
@@ -139,10 +139,13 @@ class NotificationManager
      */
     public function getUnseenUserNotifications($user)
     {
-        return $this->repository->findBy(array(
-            'user' => $user,
-            'seen' => false
-        ));
+        return $this->repository->findBy(
+            array(
+                'user' => $user,
+                'seen' => false
+            ),
+            array('date' => 'DESC')
+        );
     }
 
     /**
@@ -152,7 +155,7 @@ class NotificationManager
      */
     public function getNotificationCount($user)
     {
-        return count($this->repository->findBy(array('user' => $user)));
+        return count($this->repository->findBy(array('user' => $user),array('date' => 'DESC')));
     }
 
     /**
@@ -162,10 +165,13 @@ class NotificationManager
      */
     public function getUnseenNotificationCount($user)
     {
-        return count($this->repository->findBy(array(
-            'user' => $user,
-            'seen' => false
-        )));
+        return count($this->repository->findBy(
+            array(
+                'user' => $user,
+                'seen' => false
+            ),
+            array('date' => 'DESC')
+        ));
     }
 
 }
