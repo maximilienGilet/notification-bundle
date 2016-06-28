@@ -55,7 +55,7 @@ abstract class AbstractNotification
      */
     public function __construct()
     {
-        $this->isSeen = false;
+        $this->seen = false;
         $this->date = new \DateTime();
     }
 
