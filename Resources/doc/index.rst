@@ -57,8 +57,8 @@ Then add the following line in the AppKernel.php::
             );
          }
 
-Now let's define User and Notification classes:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Define User and Notification classes:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The goal of this bundle is to provide a ``Notification`` to a ``User``, so you need to define these classes.
 
@@ -193,8 +193,8 @@ Here is a sample configuration::
     }
 
 
-Updating Doctrine
-~~~~~~~~~~~~~~~~~
+Update Doctrine
+~~~~~~~~~~~~~~~
 
 To finish the installation, don't forget to update your schema:
 
@@ -212,6 +212,19 @@ To finish the installation, don't forget to update your schema:
 
 
 That's it ! You can now use the bundle !
+
+Enable the Notification controller :
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to enable the ``NotificationController``, simply put this in your ``routing.yml`` :
+
+.. code-block:: yaml
+
+    # routing.yml
+
+    mgilet_notifications:
+        resource: "@MgiletNotificationBundle/Controller/"
+        prefix: /notifications
 
 Basic usage :
 ~~~~~~~~~~~~~
