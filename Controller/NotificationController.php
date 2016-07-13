@@ -34,7 +34,7 @@ class NotificationController extends Controller
     /**
      * Set a Notification as seen
      *
-     * @Route("/{notification}/markAsSeen", name="notification_mark_as_seen")
+     * @Route("/{notification}/mark_as_seen", name="notification_mark_as_seen")
      * @Method("POST")
      * @param AbstractNotification $notification
      * @return JsonResponse
@@ -48,13 +48,13 @@ class NotificationController extends Controller
         $em->persist($notification);
         $em->flush();
 
-        return new JsonResponse('ok');
+        return new JsonResponse(true);
     }
 
     /**
      * Set a Notification as unseen
      *
-     * @Route("/{notification}/markAsUnseen", name="notification_mark_as_unseen")
+     * @Route("/{notification}/mark_as_unseen", name="notification_mark_as_unseen")
      * @Method("POST")
      * @param AbstractNotification $notification
      * @return JsonResponse
@@ -68,7 +68,7 @@ class NotificationController extends Controller
         $em->persist($notification);
         $em->flush();
 
-        return new JsonResponse('ok');
+        return new JsonResponse(true);
     }
 
     /**
@@ -93,7 +93,7 @@ class NotificationController extends Controller
         }
         $em->flush();
 
-        return new JsonResponse('ok');
+        return new JsonResponse(true);
     }
 
 }

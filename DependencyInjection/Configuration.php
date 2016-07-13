@@ -2,8 +2,6 @@
 
 namespace Mgilet\NotificationBundle\DependencyInjection;
 
-use AppBundle\Entity\User;
-use AppBundle\Entity\Notification;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -14,13 +12,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-
-    /** @var string */
-    const USER_ENTITY = User::class;
-
-    /** @var string */
-    const NOTIFICATION_ENTITY = Notification::class;
-
 
     /**
      * {@inheritDoc}
@@ -39,14 +30,14 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('user_class')
             ->cannotBeEmpty()
-            ->defaultValue(User::class)
+            ->defaultValue('AppBundle\\Entity\\User')
             ->info('Entity for a user (default: AppBundle\\Entity\\User)')
             ->end();
         $rootNode
             ->children()
             ->scalarNode('notification_class')
             ->cannotBeEmpty()
-            ->defaultValue(Notification::class)
+            ->defaultValue('AppBundle\\Entity\\Notification')
             ->info('Entity for a notification (default: AppBundle\\Entity\\Notification)')
             ->end();
 

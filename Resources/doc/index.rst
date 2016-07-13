@@ -74,8 +74,17 @@ Sample configuration::
     <?php
     // src/AppBundle/Entity/User.php
 
-    ...
+    namespace AppBundle\Entity;
 
+    ...
+    use Doctrine\Common\Collections\ArrayCollection;
+    use Doctrine\ORM\Mapping as ORM;
+    use Mgilet\NotificationBundle\Model\UserNotificationInterface;
+
+    /**
+     * @ORM\Entity
+     * @ORM\Table(name="user")
+     */
     class User implements UserNotificationInterface
     {
         ...
@@ -132,11 +141,19 @@ Sample configuration::
             return $this;
         }
 
+        /**
+         * {@inheritdoc}
+         */
+        public function getIdentifier()
+        {
+            $this->getId();
+        }
+
     }
 
 Now we need the Notification class.
 
-Simply extend the provided AbstractNotification class (from the ``Model`` folder) and link it to the ``User`` entity.
+Simply extend the provided MappedSuperClass ``AbstractNotification`` class (from the ``Model`` folder) and link it to the ``User`` entity.
 
 Here is a sample configuration::
 
@@ -144,8 +161,15 @@ Here is a sample configuration::
 
     // src/AppBundle/Entity/Notification.php
 
-    ...
+    namespace AppBundle\Entity;
 
+    use Doctrine\ORM\Mapping as ORM;
+    use Mgilet\NotificationBundle\Model\AbstractNotification;
+
+    /**
+     * @ORM\Entity
+     * @ORM\Table(name="notification")
+     */
     class Notification extends AbstractNotification
     {
         /**
@@ -211,12 +235,14 @@ To finish the installation, don't forget to update your schema:
     $ php bin/console doctrine:schema:update --force
 
 
-That's it ! You can now use the bundle !
-
 Enable the Notification controller :
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In order to enable the ``NotificationController``, simply put this in your ``routing.yml`` :
+This bundle provides a controller named ``NotificationController``, which is used to do basic operations (mark as seen, display all...)
+
+Note: this controller is required to use the default dropdown view.
+
+In order to enable the controller, simply put this in your ``routing.yml`` :
 
 .. code-block:: yaml
 
@@ -225,6 +251,41 @@ In order to enable the ``NotificationController``, simply put this in your ``rou
     mgilet_notifications:
         resource: "@MgiletNotificationBundle/Controller/"
         prefix: /notifications
+
+
+Assets :
+~~~~~~~~
+
+By installing this bundle with composer, all assets will be copied. if it doesn't work, execute the following command:
+
+**Symfony 2.x**
+
+.. code-block:: bash
+
+    $ php app/console assets:install
+
+**Symfony 3.x**
+
+.. code-block:: bash
+
+    $ php bin/console assets:install
+
+
+Classes not located in AppBundle :
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your entities ``User`` and/or ``Notification`` are not located in ``AppBundle`` or have different names than default, you must define their path in your ``config`` file.
+
+Example of configuration :
+
+.. code-block:: yaml
+
+    # config.yml
+
+    mgilet_notification:
+        user_class: AcmeBundle\Entity\MyCustomUser # default value is AppBundle\Entity\User
+        notification_class: AnotherBundle\Entity\MyNotification # default value is AppBundle\Entity\Notification
+
 
 Basic usage :
 ~~~~~~~~~~~~~
