@@ -1,0 +1,12 @@
+services:
+
+    mgilet.notification:
+        class: Mgilet\NotificationBundle\Manager\NotificationManager
+        arguments: ["@doctrine.orm.entity_manager", "%mgilet_notification.notification_class%"]
+
+    mgilet.twig_extension:
+            class: Mgilet\NotificationBundle\Twig\NotificationExtension
+            public: false
+            tags:
+                - { name: twig.extension }
+            arguments: ['@mgilet.notification', '@security.token_storage', '@twig']
