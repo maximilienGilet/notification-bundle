@@ -1,6 +1,12 @@
 # notification-bundle
 A simple Symfony 3 bundle for user notifications
 
+[![Latest Stable Version](https://poser.pugx.org/mgilet/notification-bundle/v/stable)](https://packagist.org/packages/mgilet/notification-bundle)
+[![Latest Unstable Version](https://poser.pugx.org/mgilet/notification-bundle/v/unstable)](https://packagist.org/packages/mgilet/notification-bundle)
+[![Total Downloads](https://poser.pugx.org/mgilet/notification-bundle/downloads)](https://packagist.org/packages/mgilet/notification-bundle)
+[![License](https://poser.pugx.org/mgilet/notification-bundle/license)](https://packagist.org/packages/mgilet/notification-bundle)
+
+
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48/big.png)](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48)
 
 Create and manage user notifications in an efficient way.
