@@ -271,10 +271,10 @@ By installing this bundle with composer, all assets will be copied. if it doesn'
     $ php bin/console assets:install
 
 
-Classes not located in AppBundle :
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Class not located in AppBundle :
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If your entities ``User`` and/or ``Notification`` are not located in ``AppBundle`` or have different names than default, you must define their path in your ``config`` file.
+If your ``Notification`` entity is not located in ``AppBundle`` or have different name than default, you must define it's path in your ``config`` file.
 
 Example of configuration :
 
@@ -283,7 +283,6 @@ Example of configuration :
     # config.yml
 
     mgilet_notification:
-        user_class: AcmeBundle\Entity\MyCustomUser # default value is AppBundle\Entity\User
         notification_class: AnotherBundle\Entity\MyNotification # default value is AppBundle\Entity\Notification
 
 

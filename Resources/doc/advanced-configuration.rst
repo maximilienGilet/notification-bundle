@@ -8,7 +8,7 @@ A simple Symfony 3 bundle for user notifications
 Advanced configuration
 ======================
 
-By default this bundle is configured to use ``AppBundle\Entity\User`` as user entity and ``AppBundle\Entity\Notification`` as notification entity.
+By default this bundle is configured to use Implementations of ``UserNotificationInterface`` as user and ``AppBundle\Entity\Notification`` as notification entity.
 
 You can change this behavior by editing your ``config.yml`` file.
 
@@ -22,17 +22,25 @@ Default configuration:
     # config.yml
 
     mgilet_notification:
-        user_class: AppBundle\Entity\User
         notification_class: AppBundle\Entity\Notification
 
 
 How to configure:
 ~~~~~~~~~~~~~~~~~
 
-* ``user_class``: the class defining a user (this class MUST implement ``UserNotificationInterface`` )
-* ``notification_class``: the class defining a notification (this class MUST extends ``AbstractNotification`` )
+* ``notification_class``: the entity defining a notification (this class MUST extends the MappedSuperClass ``AbstractNotification`` )
 
-Change the default configuration according to your existing classes.
+Change the default configuration according to your existing class.
+
+Example :
+
+.. code-block:: yaml
+
+    # config.yml
+
+    mgilet_notification:
+        notification_class: AcmeBundle\Entity\MyNotification
+
 
 Go further :
 ------------

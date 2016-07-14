@@ -52,9 +52,13 @@ Sample route::
         public function sendNotification(Request $request)
         {
             $manager = $this->get('mgilet.notification');
-            $notif = $manager->createNotification('Hello world !');
+            $notif = $manager->generateNotification('Hello world !');
             $notif->setMessage('This a notification.');
+            $notif->setLink('http://symfony.com/');
             $manager->addNotification($this->getUser(), $notif);
+
+            // or the one-line method :
+            // $manager->createNotification($this->getUser(), 'Notification subject','Some random text','http://google.fr');
 
             return $this->redirectToRoute('homepage');
         }
@@ -84,7 +88,7 @@ These functions will display the current notification count for the current user
 
 * mgilet_notification_render
 
-This function will render notifications for the current user. It takes some arguments to help you personalize notification display to your liking.
+This function will render notifications for a user (current by default). It takes some arguments to help you personalize notification display to your liking.
 
 Currently, 2 options are available :
 
@@ -98,15 +102,17 @@ note : one argument is required
     * true : will display all notification (default behavior)
     * false : will display only unseen notifications
 
+As optional second argument, you can pass a user. By default current user is selected
+
 Usage:
 ~~~~~~
 
-**Notification count ::**
+**Notification count :**
+::
 
     {{ mgilet_notification_count() }} {# all notifications #}
 
     {{ mgilet_unseen_notification_count }} {# unseen notifications #}
-
 
 **Rendering:**
 

@@ -2,7 +2,7 @@ services:
 
     mgilet.notification:
         class: Mgilet\NotificationBundle\Manager\NotificationManager
-        arguments: ["@doctrine.orm.entity_manager", "%mgilet_notification.user_class%" , "%mgilet_notification.notification_class%"]
+        arguments: ["@doctrine.orm.entity_manager", "%mgilet_notification.notification_class%"]
 
     mgilet.twig_extension:
             class: Mgilet\NotificationBundle\Twig\NotificationExtension

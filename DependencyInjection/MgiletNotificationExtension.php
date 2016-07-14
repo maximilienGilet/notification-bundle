@@ -29,6 +29,5 @@ class MgiletNotificationExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('mgilet_notification.notification_class', $config['notification_class']);
-        $container->setParameter('mgilet_notification.user_class', $config['user_class']);
     }
 }

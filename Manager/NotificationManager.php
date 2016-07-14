@@ -15,21 +15,18 @@ class NotificationManager
 {
 
     private $om;
-    private $user;
     private $notification;
     private $repository;
 
     /**
      * NotificationManager constructor.
      * @param EntityManager $om
-     * @param $user
      * @param $notification
      * @internal param $class
      */
-    public function __construct(EntityManager $om, $user, $notification)
+    public function __construct(EntityManager $om, $notification)
     {
         $this->om = $om;
-        $this->user = $user;
         $this->notification = $notification;
         $this->repository = $om->getRepository($notification);
     }
@@ -45,13 +42,13 @@ class NotificationManager
     }
 
     /**
-     * Create a notification
+     * Generate a notification
      * @param $subject
      * @param null $message
      * @param null $link
-     * @return mixed
+     * @return AbstractNotification
      */
-    public function createNotification($subject, $message = null, $link = null)
+    public function generateNotification($subject, $message = null, $link = null)
     {
         /** @var AbstractNotification $notification */
         $notification = new $this->notification;
@@ -78,6 +75,19 @@ class NotificationManager
         $this->om->flush();
 
         return $notification;
+    }
+
+    /**
+     * @param UserNotificationInterface $user
+     * @param string $subject
+     * @param string|null $message
+     * @param string|null $link
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function createNotification(UserNotificationInterface $user, $subject, $message = null, $link = null)
+    {
+        $this->addNotification($user, $this->generateNotification($subject,$message,$link));
     }
 
     /**
@@ -111,7 +121,7 @@ class NotificationManager
 
     /**
      * Mark all notifications as seen
-     * @param $notifications
+     * @param AbstractNotification[] $notifications
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */

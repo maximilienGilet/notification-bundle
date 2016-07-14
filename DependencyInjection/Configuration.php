@@ -28,19 +28,11 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('mgilet_notification');
         $rootNode
             ->children()
-            ->scalarNode('user_class')
-            ->cannotBeEmpty()
-            ->defaultValue('AppBundle\\Entity\\User')
-            ->info('Entity for a user (default: AppBundle\\Entity\\User)')
-            ->end();
-        $rootNode
-            ->children()
             ->scalarNode('notification_class')
             ->cannotBeEmpty()
             ->defaultValue('AppBundle\\Entity\\Notification')
             ->info('Entity for a notification (default: AppBundle\\Entity\\Notification)')
             ->end();
-
 
         return $treeBuilder;
     }
