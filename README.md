@@ -3,14 +3,16 @@ A simple Symfony 3 bundle for user notifications
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48/big.png)](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48)
 
-* Symfony support :
+Create and manage user notifications in an efficient way.
+
+Symfony support :
   * 2.7.x
   * 2.8.x
   * 3.x
+ 
+Bootstrap > 3.x highly recommended
 
 ## Features
-
-__1.0 Beta (not released yet) :__
 
 - Easy notification management
 - Simple Twig render method
@@ -19,22 +21,23 @@ __1.0 Beta (not released yet) :__
 - Easy setup
 - No bloated dependencies (little requirements)
 
-Notice: only Doctrine ORM is supported for now
+Notice: Only Doctrine ORM is supported for now.
 
-## Current status
+## Installation & usage
 
-__1.0 Beta roadmap :__
+Everything you need is in the [documentation](Resources/doc/index.rst) !
 
-- Basic Symfony bundle declaration : 100%
-- Model (Entities) : 100%
-- DependencyInjection : 100%
-- Manager : 100%
-- Controller : 100%
-- Twig Extensions : 100%
-- Views : 100%
-- Translations : 100% - ( de, en, es, fr, it ) (ask for more)
-- Testing : 20%
-- Documentation : 100%
+## Translations
+
+For now this bundle is only translated to de, en, es, fr, it.
+
+Help me improve this by submitting your translations.
+
+## Community
+
+You can help make this bundle better by contributing (every pull request will be considered) or submitting an issue.
+
+Enjoy and share if you like it.
 
 ## Licence
 MIT
