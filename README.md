@@ -10,7 +10,9 @@ A simple Symfony bundle to notify user
 <a href="https://packagist.org/packages/mgilet/notification-bundle"><img src="https://poser.pugx.org/mgilet/notification-bundle/license" alt="License"></a>
 </p>
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48/big.png)](https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48)
+<p align="center">
+<a href="https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48"><img src="https://insight.sensiolabs.com/projects/697abbcc-4b15-418a-a6c9-e662787fed48/big.png" alt="SensioLabsInsight"></a>
+</p>
 
 <p align="center"><img src="http://i.imgur.com/07OcF6c.gif" alt="mgilet/notificationBundle"></p>
 
