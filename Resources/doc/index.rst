@@ -43,7 +43,9 @@ Require the bundle with composer:
 
 Composer will install the bundle to your project's ``vendor/mgilet/notification-bundle`` directory.
 
-Then add the following line in the AppKernel.php::
+Then add the following line in the AppKernel.php:
+
+.. code-block:: php
 
          <?php
          // app/AppKernel.php
@@ -69,7 +71,9 @@ to make it easier to create your entity. Here is how you use it:
 2. Map the ``notifications`` field (we will create it just after)
 3. Implement ``UserNotificationInterface`` methods in your ``User`` class
 
-Sample configuration::
+Sample configuration:
+
+.. code-block:: php
 
     <?php
     // src/AppBundle/Entity/User.php
@@ -155,7 +159,9 @@ Now we need the Notification class.
 
 Simply extend the provided MappedSuperClass ``AbstractNotification`` class (from the ``Model`` folder) and link it to the ``User`` entity.
 
-Here is a sample configuration::
+Here is a sample configuration:
+
+.. code-block:: php
 
     <?php
 
