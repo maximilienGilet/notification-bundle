@@ -39,7 +39,7 @@ Require the bundle with composer:
 
 .. code-block:: bash
 
-    $ composer require maximilienGilet/notification-bundle "~1.*"
+    $ composer require maximilienGilet/notification-bundle
 
 Composer will install the bundle to your project's ``vendor/mgilet/notification-bundle`` directory.
 
