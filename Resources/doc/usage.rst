@@ -31,7 +31,9 @@ Lets write a minimalistic route : ``send-notification``.
 
 This sample route will send a notification to the user going there.
 
-Sample route::
+Sample route:
+
+.. code-block:: php
 
     <?php
 
