@@ -53,9 +53,7 @@ In order to install it, add the following line in your composer.json
 
 ...
 "require": {
- ...
  "mgilet/notification-bundle": "dev-master",
- ...
 },
 ```
 
