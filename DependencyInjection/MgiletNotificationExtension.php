@@ -22,12 +22,13 @@ class MgiletNotificationExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $loader = new YamlFileLoader(
+        $yamlLoader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
         );
-        $loader->load('services.yml');
+        $yamlLoader->load('services.yml');
 
         $container->setParameter('mgilet_notification.notification_class', $config['notification_class']);
     }
+    
 }

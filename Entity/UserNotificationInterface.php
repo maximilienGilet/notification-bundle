@@ -1,6 +1,6 @@
 <?php
 
-namespace Mgilet\NotificationBundle\Model;
+namespace Mgilet\NotificationBundle\Entity;
 
 /**
  * Interface UserNotificationInterface
