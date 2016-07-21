@@ -83,7 +83,7 @@ Sample configuration:
     ...
     use Doctrine\Common\Collections\ArrayCollection;
     use Doctrine\ORM\Mapping as ORM;
-    use Mgilet\NotificationBundle\Model\UserNotificationInterface;
+    use Mgilet\NotificationBundle\Entity\UserNotificationInterface;
 
     /**
      * @ORM\Entity
@@ -157,7 +157,7 @@ Sample configuration:
 
 Now we need the Notification class.
 
-Simply extend the provided MappedSuperClass ``AbstractNotification`` class (from the ``Model`` folder) and link it to the ``User`` entity.
+Simply extend the provided MappedSuperClass ``AbstractNotification`` class (from the ``Entity`` folder) and link it to the ``User`` entity.
 
 Here is a sample configuration:
 
@@ -170,7 +170,7 @@ Here is a sample configuration:
     namespace AppBundle\Entity;
 
     use Doctrine\ORM\Mapping as ORM;
-    use Mgilet\NotificationBundle\Model\AbstractNotification;
+    use Mgilet\NotificationBundle\Entity\AbstractNotification;
 
     /**
      * @ORM\Entity

@@ -2,8 +2,8 @@
 
 namespace Mgilet\NotificationBundle\Controller;
 
-use Mgilet\NotificationBundle\Model\AbstractNotification;
-use Mgilet\NotificationBundle\Model\UserNotificationInterface;
+use Mgilet\NotificationBundle\Entity\AbstractNotification;
+use Mgilet\NotificationBundle\Entity\UserNotificationInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
