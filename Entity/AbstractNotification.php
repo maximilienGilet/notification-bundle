@@ -1,52 +1,41 @@
 <?php
 
-namespace Mgilet\NotificationBundle\Model;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace Mgilet\NotificationBundle\Entity;
 
 /**
  * Class AbstractNotification
  * Notifications defined in your app must implement this class
  * @package maximilienGilet\NotificationBundle\Model
- * @ORM\MappedSuperclass()
  */
 abstract class AbstractNotification
 {
 
     /**
      * @var int
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="date", type="datetime", nullable=true)
      */
     protected $date;
 
     /**
      * @var string
-     * @ORM\Column(name="subject", type="string", nullable=false)
      */
     protected $subject;
     /**
      * @var string
-     * @ORM\Column(name="message", type="string", nullable=true)
      */
     protected $message;
 
     /**
      * @var string
-     * @ORM\Column(name="link", type="string", nullable=true)
      */
     protected $link;
 
     /**
      * @var boolean
-     * @ORM\Column(name="seen", type="boolean")
      */
     protected $seen;
 

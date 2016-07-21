@@ -44,28 +44,7 @@ Notice: Only Doctrine ORM is supported for now.
 
 This bundle is available on [packagist](https://packagist.org/packages/mgilet/notification-bundle).
 
-Notice : The bundle is actually in alpha state (no major issue encountered)
-
-In order to install it, add the following line in your composer.json
-
-```json
-// composer.json
-
-...
-"require": {
- "mgilet/notification-bundle": "dev-master",
-},
-```
-
-Then perform a 
-
-```bash
-$ composer install
-```
-
-This will install the latest commited version of the master branch.
-
-When a stable version will come out you will just have to enter the following command:
+First :
 
 ```bash
 $ composer require mgilet/notification-bundle

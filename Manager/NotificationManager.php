@@ -3,8 +3,8 @@
 namespace Mgilet\NotificationBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
-use Mgilet\NotificationBundle\Model\AbstractNotification;
-use Mgilet\NotificationBundle\Model\UserNotificationInterface;
+use Mgilet\NotificationBundle\Entity\AbstractNotification;
+use Mgilet\NotificationBundle\Entity\UserNotificationInterface;
 
 /**
  * Class NotificationManager
