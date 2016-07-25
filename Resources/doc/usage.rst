@@ -68,6 +68,18 @@ Sample route:
 
 This will create a notification and associate it with the current user.
 
+Events
+~~~~~~
+
+By using the ``NotificationManager`` you can listen to events thrown by the manager.
+
+List of events:
+
+* ``onCreatedNotification``    When a notification is created
+* ``onNewNotification``        When a notification is assigned to a user
+* ``onSeenNotification``       When a notification is marked as seen
+* ``onRemovedNotification``    When a notification is removed
+
 
 Twig functions
 --------------
