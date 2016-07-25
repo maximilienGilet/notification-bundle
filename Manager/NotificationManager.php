@@ -5,6 +5,9 @@ namespace Mgilet\NotificationBundle\Manager;
 use Doctrine\ORM\EntityManager;
 use Mgilet\NotificationBundle\Entity\AbstractNotification;
 use Mgilet\NotificationBundle\Entity\UserNotificationInterface;
+use Mgilet\NotificationBundle\Event\NotificationEvent;
+use Mgilet\NotificationBundle\MgiletNotificationEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Class NotificationManager
@@ -17,6 +20,7 @@ class NotificationManager
     private $om;
     private $notification;
     private $repository;
+    private $dispatcher;
 
     /**
      * NotificationManager constructor.
@@ -29,6 +33,7 @@ class NotificationManager
         $this->om = $om;
         $this->notification = $notification;
         $this->repository = $om->getRepository($notification);
+        $this->dispatcher = new EventDispatcher();
     }
 
     /**
@@ -56,6 +61,10 @@ class NotificationManager
             ->setSubject($subject)
             ->setMessage($message)
             ->setLink($link);
+        $this->om->persist($notification);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::onCreatedNotification, $event);
 
         return $notification;
     }
@@ -71,8 +80,10 @@ class NotificationManager
     public function addNotification(UserNotificationInterface $user, AbstractNotification $notification)
     {
         $user->addNotification($notification);
-        $this->om->persist($user);
-        $this->om->flush();
+        $this->om->flush($notification);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::onNewNotification, $event);
 
         return $notification;
     }
@@ -99,8 +110,10 @@ class NotificationManager
     public function removeNotification(AbstractNotification $notification)
     {
         $this->om->remove($notification);
-        $this->om->persist($notification);
         $this->om->flush();
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::onRemovedNotification, $event);
     }
 
     /**
@@ -113,8 +126,10 @@ class NotificationManager
     public function markAsSeen(AbstractNotification $notification)
     {
         $notification->setSeen(true);
-        $this->om->persist($notification);
-        $this->om->flush();
+        $this->om->flush($notification);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::onSeenNotification, $event);
 
         return $notification;
     }
@@ -182,6 +197,71 @@ class NotificationManager
             ),
             array('date' => 'DESC')
         ));
+    }
+
+    /**
+     * @param AbstractNotification $notification
+     * @param \DateTime $date
+     * @return AbstractNotification
+     */
+    public function setNotificationDate(AbstractNotification $notification, \DateTime $date)
+    {
+        $notification->setDate($date);
+        $this->om->flush($notification);
+
+        return $notification;
+    }
+
+    /**
+     * @param AbstractNotification $notification
+     * @param string $subject
+     * @return AbstractNotification
+     */
+    public function setNotificationSubject(AbstractNotification $notification, $subject)
+    {
+        $notification->setSubject($subject);
+        $this->om->flush($notification);
+
+        return $notification;
+    }
+
+    /**
+     * @param AbstractNotification $notification
+     * @param string $message
+     * @return AbstractNotification
+     */
+    public function setNotificationMessage(AbstractNotification $notification, $message)
+    {
+        $notification->setMessage($message);
+        $this->om->flush($notification);
+
+        return $notification;
+    }
+
+    /**
+     * @param AbstractNotification $notification
+     * @param string $link
+     * @return AbstractNotification
+     */
+    public function setNotificationLink(AbstractNotification $notification, $link)
+    {
+        $notification->setLink($link);
+        $this->om->flush($notification);
+
+        return $notification;
+    }
+
+    /**
+     * @param AbstractNotification $notification
+     * @param boolean $seen
+     * @return AbstractNotification
+     */
+    public function setNotificationSeen(AbstractNotification $notification, $seen)
+    {
+        $notification->setLink($seen);
+        $this->om->flush($notification);
+
+        return $notification;
     }
 
 }
