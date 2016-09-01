@@ -21,7 +21,7 @@
                 }
             }
         };
-        xhttp.open("POST", element, true);
+        xhttp.open("POST", element.href, true);
         xhttp.send();
     }
 
@@ -47,7 +47,7 @@
                 notificationCount.parentNode.parentNode.classList = '';
             }
         };
-        xhttp.open("POST", element, true);
+        xhttp.open("POST", element.href, true);
         xhttp.send();
     }
 
