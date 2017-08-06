@@ -114,7 +114,7 @@ Usage:
 
     {{ mgilet_notification_count() }} {# all notifications #}
 
-    {{ mgilet_unseen_notification_count }} {# unseen notifications #}
+    {{ mgilet_unseen_notification_count() }} {# unseen notifications #}
 
 **Rendering:**
 
