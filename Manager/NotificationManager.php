@@ -3,10 +3,14 @@
 namespace Mgilet\NotificationBundle\Manager;
 
 use Doctrine\ORM\EntityManager;
-use Mgilet\NotificationBundle\Entity\AbstractNotification;
-use Mgilet\NotificationBundle\Entity\UserNotificationInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Mgilet\NotificationBundle\Entity\NotifiableEntity;
+use Mgilet\NotificationBundle\Entity\NotifiableNotification;
+use Mgilet\NotificationBundle\Entity\Notification;
 use Mgilet\NotificationBundle\Event\NotificationEvent;
 use Mgilet\NotificationBundle\MgiletNotificationEvents;
+use Mgilet\NotificationBundle\NotifiableDiscovery;
+use Mgilet\NotificationBundle\NotifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -17,251 +21,620 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class NotificationManager
 {
 
-    private $om;
-    private $notification;
-    private $repository;
-    private $dispatcher;
+    protected $om;
+    protected $notifiableRepository;
+    protected $notificationRepository;
+    protected $notifiableNotificationRepository;
+    protected $dispatcher;
+    protected $discovery;
 
     /**
      * NotificationManager constructor.
-     * @param EntityManager $om
-     * @param $notification
-     * @internal param $class
+     *
+     * @param EntityManager       $om
+     * @param NotifiableDiscovery $discovery
+     *
      */
-    public function __construct(EntityManager $om, $notification)
+    public function __construct(EntityManager $om, NotifiableDiscovery $discovery)
     {
         $this->om = $om;
-        $this->notification = $notification;
-        $this->repository = $om->getRepository($notification);
+        $this->notifiableRepository = $om->getRepository('MgiletNotificationBundle:NotifiableEntity');
+        $this->notificationRepository = $om->getRepository('MgiletNotificationBundle:Notification');
+        $this->notifiableNotificationRepository = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
         $this->dispatcher = new EventDispatcher();
+        $this->discovery = $discovery;
+
     }
 
     /**
-     * Get a notification by it's id
-     * @param $id
-     * @return AbstractNotification
+     * Returns a list of available workers.
+     *
+     * @return array
+     * @throws \InvalidArgumentException
      */
-    public function getNotificationById($id)
-    {
-        return $this->repository->findOneBy(array('id' => $id));
+    public function getDiscoveryNotifiables() {
+        return $this->discovery->getNotifiables();
     }
 
     /**
-     * Generate a notification
-     * @param $subject
-     * @param null $message
-     * @param null $link
-     * @return AbstractNotification
+     * Returns one notifiable by name
+     *
+     * @param $name
+     *
+     * @return array
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
-    public function generateNotification($subject, $message = null, $link = null)
-    {
-        /** @var AbstractNotification $notification */
-        $notification = new $this->notification;
-        $notification
-            ->setSubject($subject)
-            ->setMessage($message)
-            ->setLink($link);
-        $this->om->persist($notification);
-
-        $event = new NotificationEvent($notification);
-        $this->dispatcher->dispatch(MgiletNotificationEvents::onCreatedNotification, $event);
-
-        return $notification;
-    }
-
-    /**
-     * Add a notification to a user
-     * @param UserNotificationInterface $user
-     * @param AbstractNotification $notification
-     * @return AbstractNotification
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addNotification(UserNotificationInterface $user, AbstractNotification $notification)
-    {
-        $user->addNotification($notification);
-        $this->om->flush($notification);
-
-        $event = new NotificationEvent($notification);
-        $this->dispatcher->dispatch(MgiletNotificationEvents::onNewNotification, $event);
-
-        return $notification;
-    }
-
-    /**
-     * @param UserNotificationInterface $user
-     * @param string $subject
-     * @param string|null $message
-     * @param string|null $link
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function createNotification(UserNotificationInterface $user, $subject, $message = null, $link = null)
-    {
-        $this->addNotification($user, $this->generateNotification($subject,$message,$link));
-    }
-
-    /**
-     * Delete a notification
-     * @param AbstractNotification $notification
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function removeNotification(AbstractNotification $notification)
-    {
-        $this->om->remove($notification);
-        $this->om->flush();
-
-        $event = new NotificationEvent($notification);
-        $this->dispatcher->dispatch(MgiletNotificationEvents::onRemovedNotification, $event);
-    }
-
-    /**
-     * Mark a notification as seen
-     * @param AbstractNotification $notification
-     * @return AbstractNotification
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function markAsSeen(AbstractNotification $notification)
-    {
-        $notification->setSeen(true);
-        $this->om->flush($notification);
-
-        $event = new NotificationEvent($notification);
-        $this->dispatcher->dispatch(MgiletNotificationEvents::onSeenNotification, $event);
-
-        return $notification;
-    }
-
-    /**
-     * Mark all notifications as seen
-     * @param AbstractNotification[] $notifications
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function markAllAsSeen($notifications)
-    {
-        foreach ($notifications as $notification) {
-            $this->markAsSeen($notification);
+    public function getNotifiable($name) {
+        $notifiables = $this->getDiscoveryNotifiables();
+        if (isset($notifiables[$name])) {
+            return $notifiables[$name];
         }
+
+        throw new \RuntimeException('Notifiable not found.');
     }
 
     /**
-     * Get all notifications for a user
-     * @param UserNotificationInterface $user
-     * @return AbstractNotification[] list of notifications
+     * Get the name of the notifiable
+     *
+     * @param NotifiableInterface $notifiable
+     *
+     * @return string|null
      */
-    public function getUserNotifications($user)
+    public function getNotifiableName(NotifiableInterface $notifiable)
     {
-        return $this->repository->findBy(array('user' => $user),array('date' => 'DESC'));
+        return $this->discovery->getNotifiableName($notifiable);
     }
 
     /**
-     * Get all unseen notifications for a user
-     * @param UserNotificationInterface $user
-     * @return AbstractNotification[]
+     * @param NotifiableInterface $notifiable
+     *
+     * @return array
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
-    public function getUnseenUserNotifications($user)
+    public function getNotifiableIdentifier(NotifiableInterface $notifiable)
     {
-        return $this->repository->findBy(
-            array(
-                'user' => $user,
-                'seen' => false
-            ),
-            array('date' => 'DESC')
+        $name = $this->getNotifiableName($notifiable);
+
+        return $this->getNotifiable($name)['identifiers'];
+    }
+
+    /**
+     * Get the identifier mapping for a NotifiableEntity
+     *
+     * @param NotifiableEntity $notifiableEntity
+     *
+     * @return array
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function getNotifiableEntityIdentifiers(NotifiableEntity $notifiableEntity)
+    {
+        $discoveryNotifiables = $this->getDiscoveryNotifiables();
+        foreach ($discoveryNotifiables as $notifiable) {
+            if ($notifiable['class'] === $notifiableEntity->getClass()){
+                return $notifiable['identifiers'];
+            }
+        }
+        throw new \RuntimeException('Unable to get the NotifiableEntity identifiers. This could be an Entity mapping issue');
+    }
+
+    /**
+     * Generates the identifier value to store a NotifiableEntity
+     *
+     * @param NotifiableInterface $notifiable
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function generateIdentifier(NotifiableInterface $notifiable)
+    {
+        $Notifiableidentifiers = $this->getNotifiableIdentifier($notifiable);
+        $identifierValues = array();
+        foreach ($Notifiableidentifiers as $identifier) {
+            $method = sprintf('get%s', ucfirst($identifier));
+            $identifierValues[] = $notifiable->$method();
+        }
+
+        return implode('-', $identifierValues);
+    }
+
+    /**
+     * Get a NotifiableEntity form a NotifiableInterface
+     *
+     * @param NotifiableInterface $notifiable
+     *
+     * @return NotifiableEntity
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function getNotifiableEntity(NotifiableInterface $notifiable)
+    {
+        $identifier = $this->generateIdentifier($notifiable);
+        $class = get_class($notifiable);
+        $entity = $this->notifiableRepository->findOneBy(array(
+            'identifier' => $identifier,
+            'class' => $class
+        ));
+
+        if (!$entity){
+            $entity = new NotifiableEntity($identifier, $class);
+            $this->om->persist($entity);
+            $this->om->flush();
+        }
+
+        return $entity;
+    }
+
+    /**
+     * @param NotifiableEntity $notifiableEntity
+     *
+     * @return NotifiableInterface
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function getNotifiableInterface(NotifiableEntity $notifiableEntity)
+    {
+        return $this->notifiableRepository->findNotifiableInterface(
+            $notifiableEntity,
+            $this->getNotifiableEntityIdentifiers($notifiableEntity)
         );
     }
 
     /**
-     * Get notification count for a user
-     * @param UserNotificationInterface $user
-     * @return int
+     * @param $id
+     *
+     * @return NotifiableEntity|null
      */
-    public function getNotificationCount($user)
+    public function getNotifiableEntityById($id)
     {
-        return count($this->repository->findBy(array('user' => $user),array('date' => 'DESC')));
+        return $this->notifiableRepository->findOneById($id);
     }
 
     /**
-     * Get unseen notification count for a user
-     * @param UserNotificationInterface $user
-     * @return int
+     * @param NotifiableInterface $notifiable
+     * @param Notification        $notification
+     *
+     * @return NotifiableNotification|null
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getUnseenNotificationCount($user)
+    private function getNotifiableNotification(NotifiableInterface $notifiable, Notification $notification)
     {
-        return count($this->repository->findBy(
-            array(
-                'user' => $user,
-                'seen' => false
-            ),
-            array('date' => 'DESC')
-        ));
+        return $this->notifiableNotificationRepository->findOne(
+            $notification->getId(),
+            $this->getNotifiableEntity($notifiable)
+        );
+
     }
 
     /**
-     * @param AbstractNotification $notification
-     * @param \DateTime $date
-     * @return AbstractNotification
+     * Avoid code duplication
+     *
+     * @param $flush
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setNotificationDate(AbstractNotification $notification, \DateTime $date)
+    private function flush($flush)
     {
-        $notification->setDate($date);
-        $this->om->flush($notification);
+        if ($flush){
+            $this->om->flush();
+        }
+    }
+
+    /**
+     * Get all notifications
+     *
+     * @return Notification[]
+     */
+    public function getAll()
+    {
+        return $this->notificationRepository->findAll();
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     *
+     * @return array
+     */
+    public function getNotifications(NotifiableInterface $notifiable)
+    {
+        return $this->notificationRepository->findAllByNotifiable($this->generateIdentifier($notifiable), get_class($notifiable));
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     *
+     * @return array
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function getUnseenNotifications(NotifiableInterface $notifiable)
+    {
+        return $this->notificationRepository->findAllByNotifiable($this->generateIdentifier($notifiable), get_class($notifiable), false);
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     *
+     * @return array
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     */
+    public function getSeenNotifications(NotifiableInterface $notifiable)
+    {
+        return $this->notificationRepository->findAllByNotifiable($this->generateIdentifier($notifiable), get_class($notifiable), true);
+    }
+
+
+    /**
+     * Get one notification by id
+     *
+     * @param $id
+     *
+     * @return Notification
+     */
+    public function getNotification($id)
+    {
+        return $this->notificationRepository->findOneById($id);
+    }
+
+    /**
+     * @param string $subject
+     * @param string $message
+     * @param string $link
+     *
+     * @return Notification
+     */
+    public function createNotification($subject, $message = null, $link = null)
+    {
+        $notification = new Notification();
+        $notification
+            ->setSubject($subject)
+            ->setMessage($message)
+            ->setLink($link)
+        ;
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::CREATED, $event);
 
         return $notification;
     }
 
     /**
-     * @param AbstractNotification $notification
-     * @param string $subject
-     * @return AbstractNotification
+     * Add a Notification to a list of NotifiableInterface entities
+     *
+     * @param NotifiableInterface[] $notifiables
+     * @param Notification          $notification
+     * @param bool                  $flush
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
-    public function setNotificationSubject(AbstractNotification $notification, $subject)
+    public function addNotification($notifiables, Notification $notification, $flush = false)
+    {
+        foreach ($notifiables as $notifiable) {
+            $entity = $this->getNotifiableEntity($notifiable);
+
+            $notifiableNotification = new NotifiableNotification();
+            $entity->addNotifiableNotification($notifiableNotification);
+            $notification->addNotifiableNotification($notifiableNotification);
+
+            $event = new NotificationEvent($notification, $notifiable);
+            $this->dispatcher->dispatch(MgiletNotificationEvents::ASSIGNED, $event);
+        }
+
+        $this->flush($flush);
+    }
+
+    /**
+     * Deletes the link between a Notifiable and a Notification
+     *
+     * @param array        $notifiables
+     * @param Notification $notification
+     * @param bool         $flush
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     */
+    public function removeNotification(array $notifiables, Notification $notification, $flush = false)
+    {
+        $repo = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
+        foreach ($notifiables as $notifiable) {
+            $repo->createQueryBuilder('nn')
+                ->delete()
+                ->where('nn.notifiableEntity = :entity')
+                ->andWhere('nn.notification = :notification')
+                ->setParameter('entity', $this->getNotifiableEntity($notifiable))
+                ->setParameter('notification', $notification)
+                ->getQuery()
+                ->execute()
+            ;
+
+            $event = new NotificationEvent($notification, $notifiable);
+            $this->dispatcher->dispatch(MgiletNotificationEvents::REMOVED, $event);
+        }
+
+        $this->flush($flush);
+    }
+
+    /**
+     * @param Notification $notification
+     *
+     * @param bool         $flush
+     *
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function deleteNotification(Notification $notification, $flush = false)
+    {
+        $this->om->remove($notification);
+        $this->flush($flush);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::DELETED, $event);
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     * @param Notification        $notification
+     * @param bool                $flush
+     *
+     * @throws EntityNotFoundException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function markAsSeen(NotifiableInterface $notifiable, Notification $notification, $flush = false)
+    {
+        $nn = $this->getNotifiableNotification($notifiable,$notification);
+        if ($nn){
+            $nn->setSeen(true);
+            $event = new NotificationEvent($notification, $notifiable);
+            $this->dispatcher->dispatch(MgiletNotificationEvents::SEEN, $event);
+            $this->flush($flush);
+        } else {
+            throw new EntityNotFoundException('The link between the notifiable and the notification has not been found');
+        }
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     * @param Notification        $notification
+     * @param bool                $flush
+     *
+     * @throws EntityNotFoundException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function markAsUnseen(NotifiableInterface $notifiable, Notification $notification, $flush = false)
+    {
+        $nn = $this->getNotifiableNotification($notifiable,$notification);
+        if ($nn){
+            $nn->setSeen(false);
+            $event = new NotificationEvent($notification, $notifiable);
+            $this->dispatcher->dispatch(MgiletNotificationEvents::UNSEEN, $event);
+            $this->flush($flush);
+        } else {
+            throw new EntityNotFoundException('The link between the notifiable and the notification has not been found');
+        }
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     * @param bool                $flush
+     *
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function markAllAsSeen(NotifiableInterface $notifiable, $flush = false)
+    {
+        $nns = $this->notifiableNotificationRepository->findAllForNotifiable(
+            $this->generateIdentifier($notifiable),
+            get_class($notifiable)
+        );
+        foreach ($nns as $nn) {
+            $nn->setSeen(true);
+            $event = new NotificationEvent($nn->getNotification(), $notifiable);
+            $this->dispatcher->dispatch(MgiletNotificationEvents::SEEN, $event);
+        }
+        $this->flush($flush);
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     * @param Notification        $notification
+     *
+     * @return bool
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws EntityNotFoundException
+     */
+    public function isSeen(NotifiableInterface $notifiable, Notification $notification)
+    {
+        $nn = $this->getNotifiableNotification($notifiable,$notification);
+        if ($nn){
+            return $nn->isSeen();
+        }
+
+        throw new EntityNotFoundException('The link between the notifiable and the notification has not been found');
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     *
+     * @return int
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getNotificationCount(NotifiableInterface $notifiable)
+    {
+        return $this->notifiableNotificationRepository->getNotificationCount(
+            $this->generateIdentifier($notifiable),
+            get_class($notifiable)
+        );
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     *
+     * @return int
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getUnseenNotificationCount(NotifiableInterface $notifiable)
+    {
+        return $this->notifiableNotificationRepository->getNotificationCount(
+            $this->generateIdentifier($notifiable),
+            get_class($notifiable),
+            false
+        );
+    }
+
+    /**
+     * @param NotifiableInterface $notifiable
+     *
+     * @return int
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getSeenNotificationCount(NotifiableInterface $notifiable)
+    {
+        return $this->notifiableNotificationRepository->getNotificationCount(
+            $this->generateIdentifier($notifiable),
+            get_class($notifiable),
+            true
+        );
+    }
+
+    /**
+     * @param Notification $notification
+     * @param \DateTime    $dateTime
+     * @param bool         $flush
+     *
+     * @return Notification
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function setDate(Notification $notification, \DateTime $dateTime, $flush = false)
+    {
+        $notification->setDate($dateTime);
+        $this->flush($flush);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::MODIFIED, $event);
+
+        return $notification;
+    }
+
+    /**
+     * @param Notification $notification
+     * @param string       $subject
+     * @param bool         $flush
+     *
+     * @return Notification
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function setSubject(Notification $notification, $subject, $flush = false)
     {
         $notification->setSubject($subject);
-        $this->om->flush($notification);
+        $this->flush($flush);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::MODIFIED, $event);
 
         return $notification;
     }
 
     /**
-     * @param AbstractNotification $notification
-     * @param string $message
-     * @return AbstractNotification
+     * @param Notification $notification
+     * @param string       $subject
+     * @param bool         $flush
+     *
+     * @return Notification
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setNotificationMessage(AbstractNotification $notification, $message)
+    public function setMessage(Notification $notification, $subject, $flush = false)
     {
-        $notification->setMessage($message);
-        $this->om->flush($notification);
+        $notification->setSubject($subject);
+        $this->flush($flush);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::MODIFIED, $event);
 
         return $notification;
     }
 
     /**
-     * @param AbstractNotification $notification
-     * @param string $link
-     * @return AbstractNotification
+     * @param Notification $notification
+     * @param string       $link
+     * @param bool         $flush
+     *
+     * @return Notification
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setNotificationLink(AbstractNotification $notification, $link)
+    public function setLink(Notification $notification, $link, $flush = false)
     {
         $notification->setLink($link);
-        $this->om->flush($notification);
+        $this->flush($flush);
+
+        $event = new NotificationEvent($notification);
+        $this->dispatcher->dispatch(MgiletNotificationEvents::MODIFIED, $event);
 
         return $notification;
     }
 
     /**
-     * @param AbstractNotification $notification
-     * @param boolean $seen
-     * @return AbstractNotification
+     * @param Notification $notification
+     *
+     * @return NotifiableInterface[]
      */
-    public function setNotificationSeen(AbstractNotification $notification, $seen)
+    public function getNotifiables(Notification $notification)
     {
-        $notification->setLink($seen);
-        $this->om->flush($notification);
+        return $this->notifiableRepository->findAllByNotification($notification);
+    }
 
-        return $notification;
+    /**
+     * @param Notification $notification
+     *
+     * @return NotifiableInterface[]
+     */
+    public function getUnseenNotifiables(Notification $notification)
+    {
+        return $this->notifiableRepository->findAllByNotification($notification, true);
+    }
+
+    /**
+     * @param Notification $notification
+     *
+     * @return NotifiableInterface[]
+     */
+    public function getSeenNotifiables(Notification $notification)
+    {
+        return $this->notifiableRepository->findAllByNotification($notification, false);
     }
 
 }

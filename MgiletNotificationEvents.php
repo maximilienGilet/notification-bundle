@@ -5,36 +5,51 @@ namespace Mgilet\NotificationBundle;
 final class MgiletNotificationEvents
 {
     /**
-     * The onCreatedNotification event occurs when an AbstractNotification is created.
-     *
-     * This event allows you to access the notification.
+     * Occurs when a Notification is created.
      *
      * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
      */
-    const onCreatedNotification = 'mgilet.notification.created_notification';
+    const CREATED = 'mgilet.notification.created';
 
     /**
-     * The onNewNotification event occurs when an AbstractNotification is created assigned to an UserNotificationInterface.
-     *
-     * This event allows you to access the notification.
+     * Occurs when a Notification is assigned to a NotifiableEntity.
      *
      * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
      */
-    const onNewNotification = 'mgilet.notification.new_notification';
+    const ASSIGNED = 'mgilet.notification.assigned';
 
     /**
-     * The onSeenNotification event occurs when an AbstractNotification is marked as seen.
-     *
-     * This event allows you to access the notification.
+     * Occurs when a Notification is marked as seen.
      *
      * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
      */
-    const onSeenNotification = 'mgilet.notification.seen_notification';
+    const SEEN = 'mgilet.notification.seen';
 
     /**
-     * The onRemovedNotification event occurs when an AbstractNotification is removed.
+     * Occurs when a Notification is marked as unseen.
      *
      * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
      */
-    const onRemovedNotification = 'mgilet.notification.removed_notification';
+    const UNSEEN = 'mgilet.notification.unseen';
+
+    /**
+     * Occurs when a Notification is modified.
+     *
+     * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
+     */
+    const MODIFIED = 'mgilet.notification.modified';
+
+    /**
+     * Occurs when a Notification is removed.
+     *
+     * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
+     */
+    const REMOVED = 'mgilet.notification.removed';
+
+    /**
+     * Occurs when a Notification is deleted
+     *
+     * @Event("Mgilet\NotificationBundle\Event\NotificationEvent")
+     */
+    const DELETED = 'mgilet.notification.delete';
 }
