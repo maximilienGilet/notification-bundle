@@ -8,7 +8,7 @@ A simple Symfony 3 bundle for user notifications
 Usage
 =====
 
-This bundle provides some methods and helpers in order to be as simple as possible to use.
+This bundle provides manuy methods and helpers in order to be as simple as possible to use.
 
 mgilet.notification service
 ---------------------------
@@ -18,10 +18,10 @@ This is the notification manager. It's designed to do manage notification in a e
 Currently, it allows you to:
 
 * create notifications
-* add notifications to users
-* mark notifications as "seen"
-* get notifications for a user
-* get notification count
+* add notifications to entities
+* mark notifications as "seen"/"unseen"
+* get notifications for an entity
+* get notification counts
 * ... and much more !
 
 Basic usage
@@ -30,6 +30,8 @@ Basic usage
 Lets write a minimalistic route : ``send-notification``.
 
 This sample route will send a notification to the user going there.
+
+Your ``User`` entity will need to be ``notifiable`` (see `installation`_)
 
 Sample route:
 
@@ -54,13 +56,15 @@ Sample route:
         public function sendNotification(Request $request)
         {
             $manager = $this->get('mgilet.notification');
-            $notif = $manager->generateNotification('Hello world !');
+            // or the one-line method :
+            // $manager->createNotification('Notification subject','Some random text','http://google.fr');
+            $notif = $manager->createNotification('Hello world !');
             $notif->setMessage('This a notification.');
             $notif->setLink('http://symfony.com/');
-            $manager->addNotification($this->getUser(), $notif);
 
-            // or the one-line method :
-            // $manager->createNotification($this->getUser(), 'Notification subject','Some random text','http://google.fr');
+            // you can add a notification to a list of entities
+            // the third parameter ``$flush`` allows you to directly flush the entities
+            $manager->addNotification(array($this->getUser()), $notif);
 
             return $this->redirectToRoute('homepage');
         }
@@ -75,10 +79,13 @@ By using the ``NotificationManager`` you can listen to events thrown by the mana
 
 List of events:
 
-* ``onCreatedNotification``    When a notification is created
-* ``onNewNotification``        When a notification is assigned to a user
-* ``onSeenNotification``       When a notification is marked as seen
-* ``onRemovedNotification``    When a notification is removed
+* ``'mgilet.notification.created'``
+* ``'mgilet.notification.assigned'`` -> added to a user
+* ``'mgilet.notification.seen'``
+* ``'mgilet.notification.unseen'``
+* ``'mgilet.notification.modified'``
+* ``'mgilet.notification.removed'``
+* ``'mgilet.notification.delete'``
 
 
 Twig functions
@@ -86,17 +93,21 @@ Twig functions
 
 This bundle also provides some useful twig functions helping you to design a great user experience.
 
-Notice : Bootstrap 3 is highly recommended for best results.
-
-If you want to make your own twig template, see : `overriding parts of the bundle`_
+If you want to make your own twig template, see : `Symfony documentation`_
 
 List of functions :
 ~~~~~~~~~~~~~~~~~~~
 
 * mgilet_notification_count
-* mgilet_unseen_notification_count
+* mgilet_notification_unseen_count
 
-These functions will display the current notification count for the current user.
+These functions will display the current notification count for a given notifiable
+
+::
+
+    {{ mgilet_notification_count() }} {# all notifications #}
+
+    {{ mgilet_unseen_notification_count }} {# unseen notifications #}
 
 ------------------
 
@@ -106,56 +117,30 @@ This function will render notifications for a user (current by default). It take
 
 Currently, 2 options are available :
 
-* display
-     * list : will display a simple list of all notifications
-     * dropdown : a responsive Bootstrap dropdown with full notification handling
-
-note : one argument is required
-
 * seen
     * true : will display all notification (default behavior)
     * false : will display only unseen notifications
 
-As optional second argument, you can pass a user. By default current user is selected
+* template
+    * use the the twig file you provide instead of the default one. NOTE : the notification list is called ``notificationList``
 
-Usage:
-~~~~~~
 
-**Notification count :**
 ::
 
-    {{ mgilet_notification_count() }} {# all notifications #}
+    {{ mgilet_notification_render(notifiableEntity) }}
 
-    {{ mgilet_unseen_notification_count }} {# unseen notifications #}
+    // only unseen notifications
+    {{ mgilet_notification_render(notifiableEntity ,{'seen': false }) }}
 
-**Rendering:**
+    // custom template
+    {{ mgilet_notification_render({ 'template': 'Path/to/my/template.html.twig'}) }}
 
-Dropdown with all notifications::
+------------------
 
-    {{ mgilet_notification_render({ 'display': 'dropdown', 'seen': true }) }}
+* mgilet_notification_generate_path
 
-Or::
+this function will help you using the bundle's controller. It will generate links to the provided routes (list, mark_as_seen, mark_as_unseen, mark_all_as_seen)
 
-    {{ mgilet_notification_render({ 'display': 'dropdown' }) }}
-
-
-Only unseen notifications in dropdown::
-
-    {{ mgilet_notification_render({ 'display': 'dropdown', 'seen': false }) }}
-
-List with all notifications::
-
-    {{ mgilet_notification_render({ 'display': 'list', 'seen': true }) }}
-
-
-Or::
-
-    {{ mgilet_notification_render({ 'display': 'list' }) }} {# does the same thing #}
-
-
-List with only unseen notifications::
-
-    {{ mgilet_notification_render({ 'display': 'list', 'seen': false }) }}
 
 
 Notification controller:
@@ -167,18 +152,11 @@ The controller is located in
 
 ``vendor/mgilet/notification-bundle/Controller/NotificationController``.
 
-Built in routes :
-~~~~~~~~~~~~~~~~~
 
-* ``/notifications`` : return the ``list`` template with all notifications
-* ``/notifications/{notification}/markAsSeen`` : mark the given notification as seen
-* ``/notifications/{notification}/markAsUnseen``: mark the given notification as unseen
-* ``/notifications/markAllAsSeen`` : mark all notifications as seen for the user
+Go further :
+------------
 
-Overriding parts of the bundle :
---------------------------------
-
-Go to `overriding parts of the bundle`_
+Go to `go further`_
 
 ----------------------------------------------
 
@@ -186,15 +164,11 @@ Go to `overriding parts of the bundle`_
 
 * `basic usage`_
 
-* `overriding parts of the bundle`_
-
-* `advanced configuration`_
-
 * `go further`_
 
 
 .. _installation: index.rst
 .. _basic usage: usage.rst
-.. _overriding parts of the bundle: overriding.rst
-.. _advanced configuration: advanced-configuration.rst
 .. _go further: further.rst
+
+.. _Symfony documentation: http://symfony.com/doc/current/bundles/override.html
