@@ -1,7 +1,7 @@
 <h1 align="center">mgilet/notification-bundle</h1>
 
 <p align="center">
-A simple Symfony bundle to notify user
+An easy yet powerful notification bundle for Symfony
 <br>
 <br>
 <a href="https://packagist.org/packages/mgilet/notification-bundle"><img src="https://poser.pugx.org/mgilet/notification-bundle/v/stable" alt="Latest Stable Version"></a>
@@ -16,22 +16,21 @@ A simple Symfony bundle to notify user
 
 <p align="center"><img src="http://i.imgur.com/07OcF6c.gif" alt="mgilet/notificationBundle"></p>
 
-Create and manage user notifications in an efficient way.
+Create and manage notifications in an efficient way.
 
 Symfony support :
   * 2.7.x
   * 2.8.x
   * 3.x
- 
-Bootstrap > 3.x highly recommended
 
 ## Features
 
-- Easy notification management
-- Simple Twig render method
-- Pretty Twig template (dropdown using Bootstrap 3)
-- Fully customizable
 - Easy setup
+- Easy to use
+- Powerful notification management
+- Simple Twig render methods
+- Fully customizable
+- Multiple notifiables entities
 - No bloated dependencies (little requirements)
 
 Notice: Only Doctrine ORM is supported for now.
@@ -50,40 +49,44 @@ First :
 $ composer require mgilet/notification-bundle
 ```
 
-See [documentation](Resources/doc/index.rst) for next steps
+
+
+**See [documentation](Resources/doc/index.rst) for next steps**
+
+
 
 ### Basic usage
 
 ```php
-class DefaultController extends Controller
+class MyController extends Controller
 {
 
     ...
 
-    /**
-     * @Route("/send-notification", name="send_notification")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
     public function sendNotification(Request $request)
     {
-        $manager = $this->get('mgilet.notification');
-        $notif = $manager->generateNotification('Hello world !');
-        $notif
-         ->setMessage('This a notification.')
-         ->setLink('http://symfony.com/');
-        $manager->addNotification($this->getUser(), $notif);
+       $manager = $this->get('mgilet.notification');
+      $notif = $manager->createNotification('Hello world !');
+      $notif->setMessage('This a notification.');
+      $notif->setLink('http://symfony.com/');
+      // or the one-line method :
+      // $manager->createNotification('Notification subject','Some random text','http://google.fr');
 
-        // or the one-line method :
-        // $manager->createNotification($this->getUser(), 'Notification subject','Some random text','http://google.fr');
-
-        return $this->redirectToRoute('homepage');
+      // you can add a notification to a list of entities
+      // the third parameter `$flush` allows you to directly flush the entities
+      $manager->addNotification(array($this->getUser()), $notif, true);
+      
+      ...
     }
 ```
 
-See [HERE](Resources/doc/usage.rst) for more
 
-## Translations
+
+**See [HERE](Resources/doc/usage.rst) for more**
+
+
+
+## ****Translations
 
 For now this bundle is only translated to de, en, es, fr, it.
 
