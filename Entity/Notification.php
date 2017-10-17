@@ -1,62 +1,68 @@
 <?php
 
-namespace Mgilet\NotificationBundle\Model;
+namespace Mgilet\NotificationBundle\Entity;
 
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class AbstractNotification
  * Notifications defined in your app must implement this class
- * @package maximilienGilet\NotificationBundle\Model
- * @ORM\MappedSuperclass()
+ *
+ * @ORM\Table(name="notification")
+ * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotificationRepository")
  */
-abstract class AbstractNotification
+class Notification
 {
 
     /**
-     * @var int
-     * @ORM\Id
+     * @var integer $id
+     *
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\GeneratedValue
      */
     protected $id;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="date", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     protected $date;
 
     /**
      * @var string
-     * @ORM\Column(name="subject", type="string", nullable=false)
+     * @ORM\Column(type="string", length=255)
      */
     protected $subject;
     /**
      * @var string
-     * @ORM\Column(name="message", type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $message;
 
     /**
      * @var string
-     * @ORM\Column(name="link", type="string", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $link;
 
     /**
-     * @var boolean
-     * @ORM\Column(name="seen", type="boolean")
+     * @var NotifiableNotification[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Mgilet\NotificationBundle\Entity\NotifiableNotification", mappedBy="notification")
      */
-    protected $seen;
+    protected $notifiableNotifications;
+
+
 
     /**
      * AbstractNotification constructor.
      */
     public function __construct()
     {
-        $this->seen = false;
         $this->date = new \DateTime();
+        $this->notifiableNotifications = new ArrayCollection();
     }
 
     /**
@@ -143,22 +149,40 @@ abstract class AbstractNotification
         return $this;
     }
 
-
     /**
-     * @return boolean Seen status of the notification
+     * @return ArrayCollection|NotifiableNotification[]
      */
-    public function isSeen()
+    public function getNotifiableNotifications()
     {
-        return $this->seen;
+        return $this->notifiableNotifications;
     }
 
     /**
-     * @param boolean $isSeen Seen status of the notification
+     * @param NotifiableNotification $notifiableNotification
+     *
      * @return $this
      */
-    public function setSeen($isSeen)
+    public function addNotifiableNotification(NotifiableNotification $notifiableNotification)
     {
-        $this->seen = $isSeen;
+        if (!$this->notifiableNotifications->contains($notifiableNotification)) {
+            $this->notifiableNotifications[] = $notifiableNotification;
+            $notifiableNotification->setNotification($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param NotifiableNotification $notifiableNotification
+     *
+     * @return $this
+     */
+    public function removeNotifiableNotification(NotifiableNotification $notifiableNotification)
+    {
+        if ($this->notifiableNotifications->contains($notifiableNotification)) {
+            $this->notifiableNotifications->removeElement($notifiableNotification);
+            $notifiableNotification->setNotification(null);
+        }
 
         return $this;
     }

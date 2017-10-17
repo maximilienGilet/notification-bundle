@@ -1,0 +1,3 @@
+notifications:
+    resource: "@MgiletNotificationBundle/Controller/"
+    type: annotation
