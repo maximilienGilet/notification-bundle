@@ -86,7 +86,7 @@ class MyController extends Controller
 
 
 
-## ****Translations
+## Translations
 
 For now this bundle is only translated to de, en, es, fr, it.
 
