@@ -15,7 +15,6 @@ class UrlListener {
     }
 
     public function onKernelRequest(GetResponseEvent $event) {
-        //$kernel = $event->getKernel();
         $request = $event->getRequest();
 
         $iNotificationId = $request->query->get('notid');
