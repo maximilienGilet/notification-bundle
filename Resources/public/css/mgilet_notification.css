@@ -1,0 +1,54 @@
+.notification-menu {
+    width: 40vw;
+    max-width: 430px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 50vh;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+.scrollable-menu a {
+    text-decoration: none;
+}
+
+.scrollable-menu li {
+    padding: 6px 0 6px 10px;
+}
+
+.scrollable-menu li:hover {
+    background-color: #eee;
+}
+
+.scrollable-menu a.text-muted:hover {
+    color: #777;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-float {
+    float: none;
+}
+
+.list-group .list-group-item .row-content .action-secondary {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+}
+
+.seen *{
+    color: #777;
+    font-weight:normal;
+}

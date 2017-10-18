@@ -32,11 +32,17 @@ And thank you for using this.
 
 * `basic usage`_
 
+* `overriding parts of the bundle`_
+
+* `advanced configuration`_
+
 * `go further`_
 
 
 .. _installation: index.rst
 .. _basic usage: usage.rst
+.. _overriding parts of the bundle: overriding.rst
+.. _advanced configuration: advanced-configuration.rst
 .. _go further: further.rst
 
 .. _Github: https://github.com/maximilienGilet/notification-bundle
