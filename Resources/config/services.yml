@@ -10,9 +10,3 @@ services:
             tags:
                 - { name: twig.extension }
             arguments: ['@mgilet.notification', '@security.token_storage', '@twig']
-    
-    mgilet.url_listener:
-            class: Mgilet\NotificationBundle\Listener\UrlListener
-            arguments: ["@mgilet.notification"]
-            tags:
-                - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
