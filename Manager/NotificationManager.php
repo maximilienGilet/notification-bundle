@@ -2,6 +2,7 @@
 
 namespace Mgilet\NotificationBundle\Manager;
 
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Mgilet\NotificationBundle\Entity\NotifiableEntity;
@@ -157,7 +158,7 @@ class NotificationManager
     public function getNotifiableEntity(NotifiableInterface $notifiable)
     {
         $identifier = $this->generateIdentifier($notifiable);
-        $class = get_class($notifiable);
+        $class = ClassUtils::getRealClass(get_class($notifiable));
         $entity = $this->notifiableRepository->findOneBy(array(
             'identifier' => $identifier,
             'class' => $class
@@ -252,7 +253,10 @@ class NotificationManager
      */
     public function getNotifications(NotifiableInterface $notifiable)
     {
-        return $this->notificationRepository->findAllByNotifiable($this->generateIdentifier($notifiable), get_class($notifiable));
+        return $this->notificationRepository->findAllByNotifiable(
+            $this->generateIdentifier($notifiable),
+            ClassUtils::getRealClass(get_class($notifiable))
+        );
     }
 
     /**
@@ -264,7 +268,10 @@ class NotificationManager
      */
     public function getUnseenNotifications(NotifiableInterface $notifiable)
     {
-        return $this->notificationRepository->findAllByNotifiable($this->generateIdentifier($notifiable), get_class($notifiable), false);
+        return $this->notificationRepository->findAllByNotifiable(
+            $this->generateIdentifier($notifiable),
+            ClassUtils::getRealClass(get_class($notifiable)),
+            false);
     }
 
     /**
@@ -276,7 +283,10 @@ class NotificationManager
      */
     public function getSeenNotifications(NotifiableInterface $notifiable)
     {
-        return $this->notificationRepository->findAllByNotifiable($this->generateIdentifier($notifiable), get_class($notifiable), true);
+        return $this->notificationRepository->findAllByNotifiable(
+            $this->generateIdentifier($notifiable),
+            ClassUtils::getRealClass(get_class($notifiable)),
+            true);
     }
 
 
@@ -448,7 +458,7 @@ class NotificationManager
     {
         $nns = $this->notifiableNotificationRepository->findAllForNotifiable(
             $this->generateIdentifier($notifiable),
-            get_class($notifiable)
+            ClassUtils::getRealClass(get_class($notifiable))
         );
         foreach ($nns as $nn) {
             $nn->setSeen(true);
@@ -491,7 +501,7 @@ class NotificationManager
     {
         return $this->notifiableNotificationRepository->getNotificationCount(
             $this->generateIdentifier($notifiable),
-            get_class($notifiable)
+            ClassUtils::getRealClass(get_class($notifiable))
         );
     }
 
@@ -508,7 +518,7 @@ class NotificationManager
     {
         return $this->notifiableNotificationRepository->getNotificationCount(
             $this->generateIdentifier($notifiable),
-            get_class($notifiable),
+            ClassUtils::getRealClass(get_class($notifiable)),
             false
         );
     }
@@ -526,7 +536,7 @@ class NotificationManager
     {
         return $this->notifiableNotificationRepository->getNotificationCount(
             $this->generateIdentifier($notifiable),
-            get_class($notifiable),
+            ClassUtils::getRealClass(get_class($notifiable)),
             true
         );
     }
