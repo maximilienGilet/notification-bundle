@@ -2,16 +2,17 @@ services:
 
     mgilet.notification:
         class: Mgilet\NotificationBundle\Manager\NotificationManager
-        arguments: ["@doctrine.orm.entity_manager", '@mgilet.notifiable_discovery']
-
-    mgilet.notifiable_discovery:
-        class: Mgilet\NotificationBundle\NotifiableDiscovery
-        arguments: [ '@doctrine.orm.entity_manager', '@annotation_reader']
-
+        arguments: ["@doctrine.orm.entity_manager", "%mgilet_notification.notification_class%"]
 
     mgilet.twig_extension:
             class: Mgilet\NotificationBundle\Twig\NotificationExtension
             public: false
             tags:
                 - { name: twig.extension }
-            arguments: ['@mgilet.notification', '@security.token_storage', '@twig', '@router']
+            arguments: ['@mgilet.notification', '@security.token_storage', '@twig']
+
+    mgilet.url_listener:
+            class: Mgilet\NotificationBundle\Listener\UrlListener
+            arguments: ["@mgilet.notification"]
+            tags:
+                - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

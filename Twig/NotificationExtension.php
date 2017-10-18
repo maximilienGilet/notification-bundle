@@ -2,12 +2,7 @@
 
 namespace Mgilet\NotificationBundle\Twig;
 
-use Doctrine\DBAL\Exception\InvalidArgumentException;
-use Mgilet\NotificationBundle\Entity\NotifiableEntity;
-use Mgilet\NotificationBundle\Entity\Notification;
 use Mgilet\NotificationBundle\Manager\NotificationManager;
-use Mgilet\NotificationBundle\NotifiableInterface;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Twig_Extension;
 
@@ -19,7 +14,6 @@ class NotificationExtension extends Twig_Extension
     protected $notificationManager;
     protected $storage;
     protected $twig;
-    protected $router;
 
     /**
      * NotificationExtension constructor.
@@ -27,12 +21,11 @@ class NotificationExtension extends Twig_Extension
      * @param TokenStorage $storage
      * @param \Twig_Environment $twig
      */
-    public function __construct(NotificationManager $notificationManager, TokenStorage $storage, \Twig_Environment $twig, Router $router)
+    public function __construct(NotificationManager $notificationManager, TokenStorage $storage, \Twig_Environment $twig)
     {
         $this->notificationManager = $notificationManager;
         $this->storage = $storage;
         $this->twig = $twig;
-        $this->router = $router;
     }
 
     /**
@@ -47,10 +40,7 @@ class NotificationExtension extends Twig_Extension
             new \Twig_SimpleFunction('mgilet_notification_count', array($this, 'countNotifications'), array(
                 'is_safe' => array('html')
             )),
-            new \Twig_SimpleFunction('mgilet_notification_unseen_count', array($this, 'countUnseenNotifications'), array(
-                'is_safe' => array('html')
-            )),
-            new \Twig_SimpleFunction('mgilet_notification_generate_path', array($this, 'generatePath'), array(
+            new \Twig_SimpleFunction('mgilet_unseen_notification_count', array($this, 'countUnseenNotifications'), array(
                 'is_safe' => array('html')
             ))
         );
@@ -58,148 +48,101 @@ class NotificationExtension extends Twig_Extension
 
     /**
      * Rendering notifications in Twig
-     *
-     * @param array               $options
-     * @param NotifiableInterface $notifiable
-     *
+     * @param array $options
+     * @param null $user
      * @return null|string
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
      */
-    public function render(NotifiableInterface $notifiable, array $options = array())
+    public function render($options = array(), $user = null)
     {
         if( !array_key_exists('seen',$options)) {
             $options['seen'] = true;
         }
-
-        return $this->renderNotifications($notifiable, $options);
+        if ($options['display'] === 'list') {
+            return $this->renderNotifications($user, $options['seen']);
+        }
+        if ($options['display'] === 'dropdown') {
+            return $this->renderDropdownNotifications($user, $options['seen']);
+        }
+        return null;
     }
 
     /**
-     * Render notifications of the notifiable as a list
-     *
-     * @param NotifiableInterface   $notifiable
-     * @param array                 $options
-     *
+     * Render notifications for a user
+     * @param null $user
+     * @param bool $seen
      * @return string
-     *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @internal param \Twig_Environment $twig
      */
-    public function renderNotifications(NotifiableInterface $notifiable, array $options)
+    public function renderNotifications($user = null, $seen = true)
     {
-        if ($options['seen']) {
-            $notifications = $this->notificationManager->getNotifications($notifiable);
+        $user = $this->getUser($user);
+        if ($seen) {
+            $notifications = $this->notificationManager->getUserNotifications($user);
         } else {
-            $notifications = $this->notificationManager->getUnseenNotifications($notifiable);
+            $notifications = $this->notificationManager->getUnseenUserNotifications($user);
         }
 
-        // if the template option is set, use custom template
-        $template = array_key_exists('template', $options) ? $options['template'] : 'MgiletNotificationBundle::notification_list.html.twig';
-
-        return $this->twig->render($template,
+        return $this->twig->render('MgiletNotificationBundle::notification_list.html.twig',
             array(
-                'notificationList' => $notifications
+                'notifications' => $notifications
             )
         );
     }
 
     /**
-     * Display the total count of notifications for the notifiable
-     *
-     * @param NotifiableInterface $notifiable
-     *
-     * @return int
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
+     * Render notifications for a user in a dropdown (Bootstrap 3 highly recommended)
+     * @param null $user
+     * @param bool $seen
+     * @return mixed
      */
-    public function countNotifications(NotifiableInterface $notifiable)
+    public function renderDropdownNotifications($user = null, $seen = true)
     {
-        return $this->notificationManager->getNotificationCount($notifiable);
-    }
-
-    /**
-     * Display the count of unseen notifications for this notifiable
-     *
-     * @param NotifiableInterface $notifiable
-     *
-     * @return int
-     *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
-     */
-    public function countUnseenNotifications(NotifiableInterface $notifiable)
-    {
-        return $this->notificationManager->getUnseenNotificationCount($notifiable);
-    }
-
-    /**
-     * Returns the path to the NotificationController action
-     *
-     * @param                   $route
-     * @param                   $notifiable
-     * @param Notification|null $notification
-     *
-     * @return \InvalidArgumentException|string
-     * @throws \RuntimeException
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \InvalidArgumentException
-     */
-    public function generatePath($route, $notifiable, Notification $notification = null)
-    {
-        if ($notifiable instanceof NotifiableInterface){
-            $notifiableId = $this->notificationManager->getNotifiableEntity($notifiable)->getId();
-        } elseif ($notifiable instanceof NotifiableEntity){
-            $notifiableId = $notifiable->getId();
+        $user = $this->getUser($user);
+        if ($seen) {
+            $notifications = $this->notificationManager->getUserNotifications($user);
         } else {
-            throw new InvalidArgumentException('You must provide a NotifiableInterface or NotifiableEntity object');
+            $notifications = $this->notificationManager->getUnseenUserNotifications($user);
         }
 
-        switch ($route){
-            case 'notification_list':
-                return $this->router->generate(
-                    'notification_list',
-                    array('notifiable' => $notifiableId)
-                );
-                break;
-            case 'notification_mark_as_seen':
-                if (!$notification){
-                    throw new \InvalidArgumentException('You must provide a Notification Entity');
-                }
+        return $this->twig->render('MgiletNotificationBundle::notification_dropdown.html.twig', array(
+            'notifications' => $notifications
+        ));
+    }
 
-                return $this->router->generate(
-                    'notification_mark_as_seen',
-                    array(
-                        'notifiable' => $notifiableId,
-                        'notification' => $notification->getId()
-                    )
-                );
-                break;
-            case 'notification_mark_as_unseen':
-                if (!$notification){
-                    throw new \InvalidArgumentException('You must provide a Notification Entity');
-                }
+    /**
+     * Display the total count of notifications for this user
+     * @param null $user
+     * @return int
+     */
+    public function countNotifications($user = null)
+    {
+        $user = $this->getUser($user);
+        return $this->notificationManager->getNotificationCount($user);
+    }
 
-                return $this->router->generate(
-                    'notification_mark_as_unseen',
-                    array(
-                        'notifiable' => $notifiableId,
-                        'notification' => $notification->getId()
-                    )
-                );
-                break;
-            case 'notification_mark_all_as_seen':
-                return $this->router->generate('notification_mark_all_as_seen', array('notifiable' => $notifiableId));
-                break;
-            default:
-                return new \InvalidArgumentException('You must provide a valid route path. Paths availables : notification_list, notification_mark_as_seen, notification_mark_as_unseen, notification_mark_all_as_seen');
+    /**
+     * Display the count of unseen notifications for this user
+     * @param null $user
+     * @return int
+     */
+    public function countUnseenNotifications($user = null)
+    {
+        $user = $this->getUser($user);
+        return $this->notificationManager->getUnseenNotificationCount($user);
+    }
+
+    /**
+     * If no user is specified return current user
+     * @param null $user
+     * @return mixed user
+     */
+    private function getUser($user = null)
+    {
+        if (!$user) {
+            return $this->storage->getToken()->getUser();
         }
+
+        return $user;
     }
 
     /**
