@@ -4,6 +4,7 @@ namespace Mgilet\NotificationBundle;
 
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Metadata\ClassMetadata;
 
@@ -57,10 +58,10 @@ class NotifiableDiscovery
      */
     public function getNotifiableName(NotifiableInterface $notifiable)
     {
-	// fixes the case when the notifiable is a proxy
+        // fixes the case when the notifiable is a proxy
         $class = ClassUtils::getRealClass(get_class($notifiable));
         $annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($class), 'Mgilet\NotificationBundle\Annotation\Notifiable');
-        if ($annotation){
+        if ($annotation) {
             return $annotation->getName();
         }
 
