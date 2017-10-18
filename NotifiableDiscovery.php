@@ -57,7 +57,9 @@ class NotifiableDiscovery
      */
     public function getNotifiableName(NotifiableInterface $notifiable)
     {
-        $annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($notifiable), 'Mgilet\NotificationBundle\Annotation\Notifiable');
+	// fixes the case when the notifiable is a proxy
+        $class = ClassUtils::getRealClass(get_class($notifiable));
+        $annotation = $this->annotationReader->getClassAnnotation(new \ReflectionClass($class), 'Mgilet\NotificationBundle\Annotation\Notifiable');
         if ($annotation){
             return $annotation->getName();
         }
