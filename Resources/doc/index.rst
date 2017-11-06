@@ -66,7 +66,7 @@ Example:
     ...
     use Doctrine\Common\Collections\ArrayCollection;
     use Doctrine\ORM\Mapping as ORM;
-    use Mgilet\NotificationBundle\Entity\UserNotificationInterface;
+    use Mgilet\NotificationBundle\UserNotificationInterface;
 
     /**
      * @ORM\Entity
