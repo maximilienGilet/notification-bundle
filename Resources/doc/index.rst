@@ -104,8 +104,6 @@ Enable the Notification controller :
 
 This bundle provides a controller named ``NotificationController``, which is used to do basic operations (mark as seen, display all...)
 
-Note: this controller is required to use the default dropdown view.
-
 In order to enable the controller, simply put this in your ``routing.yml`` :
 
 .. code-block:: yaml
