@@ -82,7 +82,7 @@ class MyController extends Controller
 
 
 
-**See [HERE](Resources/doc/usage.rst) for more**
+### **See [HERE](Resources/doc/index.rst) for more**
 
 
 
