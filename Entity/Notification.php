@@ -50,7 +50,7 @@ class Notification
 
     /**
      * @var NotifiableNotification[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Mgilet\NotificationBundle\Entity\NotifiableNotification", mappedBy="notification")
+     * @ORM\OneToMany(targetEntity="Mgilet\NotificationBundle\Entity\NotifiableNotification", mappedBy="notification", cascade={"persist"})
      */
     protected $notifiableNotifications;
 
@@ -88,7 +88,7 @@ class Notification
     public function setDate($date)
     {
         $this->date = $date;
-        
+
         return $this;
     }
 
