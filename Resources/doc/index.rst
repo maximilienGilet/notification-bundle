@@ -59,27 +59,28 @@ Example:
 .. code-block:: php
 
     <?php
-    // src/AppBundle/Entity/User.php
+    // src/AppBundle/Entity/MyEntity.php
 
     namespace AppBundle\Entity;
 
     ...
-    use Doctrine\Common\Collections\ArrayCollection;
-    use Doctrine\ORM\Mapping as ORM;
-    use Mgilet\NotificationBundle\UserNotificationInterface;
+    use Mgilet\NotificationBundle\Annotation\Notifiable;
+    use Mgilet\NotificationBundle\NotifiableInterface;
 
     /**
      * @ORM\Entity
      * @ORM\Table(name="my_entity")
      * @Notifiable(name="my_entity")
      */
-    class MyEntity implements Mgilet\NotificationBundle\NotifiableInterface
+    class MyEntity implements NotifiableInterface
     {
         ...
 
 
 You can set as many entities ``notifiables`` as you want.
-Entities with multiple identifiers are supported
+Entities with multiple identifiers are supported.
+
+After this, you can send notifications to any ``notifiable`` entity.
 
 Update Doctrine
 ~~~~~~~~~~~~~~~
