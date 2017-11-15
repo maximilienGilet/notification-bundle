@@ -64,7 +64,7 @@ Sample route:
 
             // you can add a notification to a list of entities
             // the third parameter ``$flush`` allows you to directly flush the entities
-            $manager->addNotification(array($this->getUser()), $notif);
+            $manager->addNotification(array($this->getUser()), $notif, true);
 
             return $this->redirectToRoute('homepage');
         }
@@ -80,7 +80,7 @@ By using the ``NotificationManager`` you can listen to events thrown by the mana
 List of events:
 
 * ``'mgilet.notification.created'``
-* ``'mgilet.notification.assigned'`` -> added to a user
+* ``'mgilet.notification.assigned'`` -> when a notification is added to a notifiable entity
 * ``'mgilet.notification.seen'``
 * ``'mgilet.notification.unseen'``
 * ``'mgilet.notification.modified'``
@@ -98,8 +98,10 @@ If you want to make your own twig template, see : `Symfony documentation`_
 List of functions :
 ~~~~~~~~~~~~~~~~~~~
 
-* mgilet_notification_count
-* mgilet_notification_unseen_count
+**Counting notifications**
+
+* ``mgilet_notification_count``
+* ``mgilet_notification_unseen_count``
 
 These functions will display the current notification count for a given notifiable
 
@@ -111,18 +113,20 @@ These functions will display the current notification count for a given notifiab
 
 ------------------
 
-* mgilet_notification_render
+**Rendering notifications**
+
+* ``mgilet_notification_render``
 
 This function will render notifications for a user (current by default). It takes some arguments to help you personalize notification display to your liking.
 
 Currently, 2 options are available :
 
-* seen
-    * true : will display all notification (default behavior)
+* ``seen``
+    * true : will display all notification (default behavior)
     * false : will display only unseen notifications
 
-* template
-    * use the the twig file you provide instead of the default one. NOTE : the notification list is called ``notificationList``
+* ``template``
+    * use the the twig file you provide instead of the default one. NOTE : the notification list is called ``notificationList``
 
 
 ::
@@ -137,9 +141,18 @@ Currently, 2 options are available :
 
 ------------------
 
-* mgilet_notification_generate_path
+**Interact with notifications**
 
-this function will help you using the bundle's controller. It will generate links to the provided routes (list, mark_as_seen, mark_as_unseen, mark_all_as_seen)
+* ``mgilet_notification_generate_path``
+
+this function will help you using the bundle's controller. 
+
+It will generate links to the provided routes: 
+
+* ``list``
+* ``mark_as_seen``
+* ``mark_as_unseen`` 
+* ``mark_all_as_seen``
 
 
 
