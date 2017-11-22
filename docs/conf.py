@@ -43,7 +43,7 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'Resources/doc/index'
 
 # General information about the project.
 project = 'mgilet/notification-bundle'
@@ -164,6 +164,3 @@ texinfo_documents = [
      author, 'mgiletnotification-bundle', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
