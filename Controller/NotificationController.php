@@ -111,5 +111,4 @@ class NotificationController extends Controller
 
         return new JsonResponse(true);
     }
-
 }

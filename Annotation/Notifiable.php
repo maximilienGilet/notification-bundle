@@ -2,7 +2,6 @@
 
 namespace Mgilet\NotificationBundle\Annotation;
 
-
 use Doctrine\Common\Annotations\Annotation;
 
 /**
@@ -39,6 +38,4 @@ class Notifiable
 
         return $this;
     }
-
-
 }

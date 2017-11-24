@@ -68,7 +68,7 @@ class NotificationExtension extends Twig_Extension
      */
     public function render(NotifiableInterface $notifiable, array $options = array())
     {
-        if( !array_key_exists('seen',$options)) {
+        if (!array_key_exists('seen', $options)) {
             $options['seen'] = true;
         }
 
@@ -153,15 +153,15 @@ class NotificationExtension extends Twig_Extension
      */
     public function generatePath($route, $notifiable, Notification $notification = null)
     {
-        if ($notifiable instanceof NotifiableInterface){
+        if ($notifiable instanceof NotifiableInterface) {
             $notifiableId = $this->notificationManager->getNotifiableEntity($notifiable)->getId();
-        } elseif ($notifiable instanceof NotifiableEntity){
+        } elseif ($notifiable instanceof NotifiableEntity) {
             $notifiableId = $notifiable->getId();
         } else {
             throw new InvalidArgumentException('You must provide a NotifiableInterface or NotifiableEntity object');
         }
 
-        switch ($route){
+        switch ($route) {
             case 'notification_list':
                 return $this->router->generate(
                     'notification_list',
@@ -169,7 +169,7 @@ class NotificationExtension extends Twig_Extension
                 );
                 break;
             case 'notification_mark_as_seen':
-                if (!$notification){
+                if (!$notification) {
                     throw new \InvalidArgumentException('You must provide a Notification Entity');
                 }
 
@@ -182,7 +182,7 @@ class NotificationExtension extends Twig_Extension
                 );
                 break;
             case 'notification_mark_as_unseen':
-                if (!$notification){
+                if (!$notification) {
                     throw new \InvalidArgumentException('You must provide a Notification Entity');
                 }
 

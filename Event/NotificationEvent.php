@@ -8,7 +8,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 class NotificationEvent extends Event
 {
-
     private $notification;
     private $notifiable;
 
@@ -39,5 +38,4 @@ class NotificationEvent extends Event
     {
         return $this->notifiable;
     }
-
 }

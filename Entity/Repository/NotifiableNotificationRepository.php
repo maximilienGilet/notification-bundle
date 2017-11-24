@@ -8,7 +8,6 @@
 
 namespace Mgilet\NotificationBundle\Entity\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
 use Mgilet\NotificationBundle\Entity\NotifiableNotification;
 
@@ -47,7 +46,7 @@ class NotifiableNotificationRepository extends EntityRepository
     public function findAllForNotifiable($notifiable_identifier, $notifiable_class)
     {
         return $this->createQueryBuilder('nn')
-            ->join('nn.notifiableEntity','ne')
+            ->join('nn.notifiableEntity', 'ne')
             ->where('ne.identifier = :identifier')
             ->andWhere('ne.class = :class')
             ->setParameter('identifier', $notifiable_identifier)
@@ -120,9 +119,9 @@ class NotifiableNotificationRepository extends EntityRepository
      */
     public function getNotificationCount($notifiable_identifier, $notifiable_class, $seen = null)
     {
-        $qb = $this->getNotificationCoundQb($notifiable_identifier,$notifiable_class);
+        $qb = $this->getNotificationCoundQb($notifiable_identifier, $notifiable_class);
 
-        if ($seen !== null){
+        if ($seen !== null) {
             $whereSeen = $seen ? 1 : 0;
             $qb
                 ->andWhere('nn.seen = :seen')
@@ -130,5 +129,4 @@ class NotifiableNotificationRepository extends EntityRepository
         }
         return $qb->getQuery()->getSingleScalarResult();
     }
-
 }

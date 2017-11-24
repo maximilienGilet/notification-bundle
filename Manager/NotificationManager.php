@@ -12,6 +12,7 @@ use Mgilet\NotificationBundle\Event\NotificationEvent;
 use Mgilet\NotificationBundle\MgiletNotificationEvents;
 use Mgilet\NotificationBundle\NotifiableDiscovery;
 use Mgilet\NotificationBundle\NotifiableInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -21,13 +22,13 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class NotificationManager
 {
-
+    protected $container;
+    protected $discovery;
     protected $om;
+    protected $dispatcher;
     protected $notifiableRepository;
     protected $notificationRepository;
     protected $notifiableNotificationRepository;
-    protected $dispatcher;
-    protected $discovery;
 
     /**
      * NotificationManager constructor.
@@ -36,15 +37,15 @@ class NotificationManager
      * @param NotifiableDiscovery $discovery
      *
      */
-    public function __construct(EntityManager $om, NotifiableDiscovery $discovery)
+    public function __construct(Container $container, NotifiableDiscovery $discovery)
     {
-        $this->om = $om;
-        $this->notifiableRepository = $om->getRepository('MgiletNotificationBundle:NotifiableEntity');
-        $this->notificationRepository = $om->getRepository('MgiletNotificationBundle:Notification');
-        $this->notifiableNotificationRepository = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
-        $this->dispatcher = new EventDispatcher();
+        $this->container = $container;
         $this->discovery = $discovery;
-
+        $this->om = $container->get('doctrine.orm.entity_manager');
+        $this->dispatcher = $container->get('event_dispatcher');
+        $this->notifiableRepository = $this->om->getRepository('MgiletNotificationBundle:NotifiableEntity');
+        $this->notificationRepository = $this->om->getRepository('MgiletNotificationBundle:Notification');
+        $this->notifiableNotificationRepository = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
     }
 
     /**
@@ -53,7 +54,8 @@ class NotificationManager
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function getDiscoveryNotifiables() {
+    public function getDiscoveryNotifiables()
+    {
         return $this->discovery->getNotifiables();
     }
 
@@ -67,7 +69,8 @@ class NotificationManager
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function getNotifiable($name) {
+    public function getNotifiable($name)
+    {
         $notifiables = $this->getDiscoveryNotifiables();
         if (isset($notifiables[$name])) {
             return $notifiables[$name];
@@ -115,7 +118,7 @@ class NotificationManager
     {
         $discoveryNotifiables = $this->getDiscoveryNotifiables();
         foreach ($discoveryNotifiables as $notifiable) {
-            if ($notifiable['class'] === $notifiableEntity->getClass()){
+            if ($notifiable['class'] === $notifiableEntity->getClass()) {
                 return $notifiable['identifiers'];
             }
         }
@@ -164,7 +167,7 @@ class NotificationManager
             'class' => $class
         ));
 
-        if (!$entity){
+        if (!$entity) {
             $entity = new NotifiableEntity($identifier, $class);
             $this->om->persist($entity);
             $this->om->flush();
@@ -216,7 +219,6 @@ class NotificationManager
             $notification->getId(),
             $this->getNotifiableEntity($notifiable)
         );
-
     }
 
     /**
@@ -228,7 +230,7 @@ class NotificationManager
      */
     private function flush($flush)
     {
-        if ($flush){
+        if ($flush) {
             $this->om->flush();
         }
     }
@@ -413,8 +415,8 @@ class NotificationManager
      */
     public function markAsSeen(NotifiableInterface $notifiable, Notification $notification, $flush = false)
     {
-        $nn = $this->getNotifiableNotification($notifiable,$notification);
-        if ($nn){
+        $nn = $this->getNotifiableNotification($notifiable, $notification);
+        if ($nn) {
             $nn->setSeen(true);
             $event = new NotificationEvent($notification, $notifiable);
             $this->dispatcher->dispatch(MgiletNotificationEvents::SEEN, $event);
@@ -435,8 +437,8 @@ class NotificationManager
      */
     public function markAsUnseen(NotifiableInterface $notifiable, Notification $notification, $flush = false)
     {
-        $nn = $this->getNotifiableNotification($notifiable,$notification);
-        if ($nn){
+        $nn = $this->getNotifiableNotification($notifiable, $notification);
+        if ($nn) {
             $nn->setSeen(false);
             $event = new NotificationEvent($notification, $notifiable);
             $this->dispatcher->dispatch(MgiletNotificationEvents::UNSEEN, $event);
@@ -480,8 +482,8 @@ class NotificationManager
      */
     public function isSeen(NotifiableInterface $notifiable, Notification $notification)
     {
-        $nn = $this->getNotifiableNotification($notifiable,$notification);
-        if ($nn){
+        $nn = $this->getNotifiableNotification($notifiable, $notification);
+        if ($nn) {
             return $nn->isSeen();
         }
 
@@ -646,5 +648,4 @@ class NotificationManager
     {
         return $this->notifiableRepository->findAllByNotification($notification, false);
     }
-
 }

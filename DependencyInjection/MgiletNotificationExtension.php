@@ -25,7 +25,5 @@ class MgiletNotificationExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
         $yamlLoader->load('services.yml');
-
     }
-    
 }

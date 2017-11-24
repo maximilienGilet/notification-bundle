@@ -17,7 +17,7 @@ class NotificationRepository extends EntityRepository
     {
         $qb = $this->findAllByNotifiableQb($identifier, $class);
 
-        if ($seen !== null){
+        if ($seen !== null) {
             $whereSeen = $seen ? 1 : 0;
             $qb
                 ->andWhere('notifiable_notifications.seen = :seen')

@@ -2,7 +2,6 @@
 
 namespace Mgilet\NotificationBundle;
 
-
 /**
  * Interface NotifiableInterface
  *

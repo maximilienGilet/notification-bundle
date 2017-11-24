@@ -47,7 +47,7 @@ class NotifiableRepository extends EntityRepository
             ->setParameter('notification_id', $id)
         ;
 
-        if ($seen !== null){
+        if ($seen !== null) {
             $whereSeen = $seen ? 1 : 0;
             $qb
                 ->andWhere('nn.seen = :seen')
