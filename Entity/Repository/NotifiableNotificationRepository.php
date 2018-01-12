@@ -64,6 +64,7 @@ class NotifiableNotificationRepository extends EntityRepository
     public function findAllForNotifiableIdQb($id)
     {
         return $this->createQueryBuilder('nn')
+            ->addSelect('n')
             ->join('nn.notification', 'n')
             ->join('nn.notifiableEntity', 'ne')
             ->where('ne.id = :id')
