@@ -10,7 +10,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Class NotifiableEntity
  * @package Mgilet\NotificationBundle\Entity
  *
- * @ORM\Table(name="notifiable")
  * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotifiableRepository")
  * @UniqueEntity(fields={"identifier", "class"})
  */
