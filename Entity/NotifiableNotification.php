@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotifiableNotificationRepository")
  *
  */
-class NotifiableNotification
+class NotifiableNotification implements \JsonSerializable
 {
     /**
      * @var integer $id
@@ -115,5 +115,21 @@ class NotifiableNotification
         $this->notifiableEntity = $notifiableEntity;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id'           => $this->getId(),
+            'seen'         => $this->isSeen(),
+            'notification' => $this->getNotification(),
+            // for the notifiable, we serialize only the id:
+            // - we don't need not want the FQCN exposed
+            // - most of the time we will have a proxy and don't want to trigger lazy loading
+            'notifiable'   => [ 'id' => $this->getNotifiableEntity()->getId() ]
+        ];
     }
 }
