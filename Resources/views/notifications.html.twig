@@ -1,19 +1,19 @@
 Notifications :
-<form action="{{ mgilet_notification_generate_path('notification_mark_all_as_seen', notifiableNotifications|first.notifiableEntity) }}"
+<form action="{{ mgilet_notification_generate_path('notification_mark_all_as_seen', notificationList|first.notifiableEntity) }}"
       method="post">
     <button type="submit">Mark all as seen</button>
 </form>
 <ul>
-    {% for notifiableNotification in notifiableNotifications %}
+    {% for item in notificationList %}
         <li>
-            <b>{{ notifiableNotification.notification }}</b>
+            <b>{{ item.notification }}</b>
             <br>
-            seen : {{ notifiableNotification.seen }}
-            <form action="{{ mgilet_notification_generate_path('notification_mark_as_seen', notifiableNotification.notifiableEntity, notifiableNotification.notification) }}"
+            seen : {{ item.seen }}
+            <form action="{{ mgilet_notification_generate_path('notification_mark_as_seen', item.notifiableEntity, item.notification) }}"
                   method="post">
                 <button type="submit">Mark as seen</button>
             </form>
-            <form action="{{ mgilet_notification_generate_path('notification_mark_as_unseen', notifiableNotification.notifiableEntity, notifiableNotification.notification) }}"
+            <form action="{{ mgilet_notification_generate_path('notification_mark_as_unseen', item.notifiableEntity, item.notification) }}"
                   method="post">
                 <button type="submit">Mark as unseen</button>
             </form>

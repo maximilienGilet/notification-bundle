@@ -28,8 +28,10 @@ class NotificationController extends Controller
     public function listAction($notifiable)
     {
         $notifiableRepo = $this->get('doctrine.orm.entity_manager')->getRepository('MgiletNotificationBundle:NotifiableNotification');
+        $notificationList = $notifiableRepo->findAllForNotifiableId($notifiable);
         return $this->render('MgiletNotificationBundle::notifications.html.twig', array(
-            'notifiableNotifications' => $notifiableRepo->findAllForNotifiableId($notifiable)
+            'notificationList' => $notificationList,
+            'notifiableNotifications' => $notificationList // deprecated: alias for backward compatibility only
         ));
     }
 
