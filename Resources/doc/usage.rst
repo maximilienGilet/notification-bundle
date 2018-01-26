@@ -109,7 +109,7 @@ These functions will display the current notification count for a given notifiab
 
     {{ mgilet_notification_count() }} {# all notifications #}
 
-    {{ mgilet_unseen_notification_count }} {# unseen notifications #}
+    {{ mgilet_notification_unseen_count() }} {# unseen notifications #}
 
 ------------------
 
