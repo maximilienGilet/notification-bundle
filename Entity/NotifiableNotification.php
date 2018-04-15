@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Class NotifiableNotification
  * @package Mgilet\NotificationBundle\Entity
  *
- * @ORM\Table(name="notifiable_notification")
  * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotifiableNotificationRepository")
  *
  */
