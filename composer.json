@@ -1,7 +1,7 @@
 {
   "name" : "mgilet/notification-bundle",
   "license": "MIT",
-  "description" : "A simple yet powerful Symfony 2/3/4 bundle for notifications",
+  "description" : "A simple Symfony 3 bundle for user notifications",
   "type" : "symfony-bundle",
   "authors" : [{
     "name" : "Maximilien Gilet",
@@ -11,7 +11,7 @@
     "symfony notification bundle simple"
   ],
   "require" : {
-    "symfony/symfony": "^2.7 || ^3.0 || ^4.0",
+    "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
     "twig/twig": "*",
     "doctrine/doctrine-bundle": "*"
   },
