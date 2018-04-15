@@ -28,7 +28,7 @@ class NotificationController extends Controller
     public function listAction($notifiable)
     {
         $notifiableRepo = $this->get('doctrine.orm.entity_manager')->getRepository('MgiletNotificationBundle:NotifiableNotification');
-        return $this->render('MgiletNotificationBundle::notifications.html.twig', array(
+        return $this->render('@MgiletNotificationBundle/notifications.html.twig', array(
             'notifiableNotifications' => $notifiableRepo->findAllForNotifiableId($notifiable)
         ));
     }
