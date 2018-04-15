@@ -255,7 +255,7 @@ class NotificationManager
      */
     public function getNotifications(NotifiableInterface $notifiable)
     {
-        return $this->notificationRepository->findAllByNotifiable(
+        return $this->notifiableNotificationRepository->findAllByNotifiable(
             $this->generateIdentifier($notifiable),
             ClassUtils::getRealClass(get_class($notifiable))
         );
@@ -270,7 +270,7 @@ class NotificationManager
      */
     public function getUnseenNotifications(NotifiableInterface $notifiable)
     {
-        return $this->notificationRepository->findAllByNotifiable(
+        return $this->notifiableNotificationRepository->findAllByNotifiable(
             $this->generateIdentifier($notifiable),
             ClassUtils::getRealClass(get_class($notifiable)),
             false);
@@ -285,7 +285,7 @@ class NotificationManager
      */
     public function getSeenNotifications(NotifiableInterface $notifiable)
     {
-        return $this->notificationRepository->findAllByNotifiable(
+        return $this->notifiableNotificationRepository->findAllByNotifiable(
             $this->generateIdentifier($notifiable),
             ClassUtils::getRealClass(get_class($notifiable)),
             true);
