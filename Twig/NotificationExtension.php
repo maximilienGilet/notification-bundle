@@ -49,9 +49,6 @@ class NotificationExtension extends Twig_Extension
             )),
             new \Twig_SimpleFunction('mgilet_notification_unseen_count', array($this, 'countUnseenNotifications'), array(
                 'is_safe' => array('html')
-            )),
-            new \Twig_SimpleFunction('mgilet_notification_generate_path', array($this, 'generatePath'), array(
-                'is_safe' => array('html')
             ))
         );
     }
@@ -137,71 +134,6 @@ class NotificationExtension extends Twig_Extension
     public function countUnseenNotifications(NotifiableInterface $notifiable)
     {
         return $this->notificationManager->getUnseenNotificationCount($notifiable);
-    }
-
-    /**
-     * Returns the path to the NotificationController action
-     *
-     * @param                   $route
-     * @param                   $notifiable
-     * @param Notification|null $notification
-     *
-     * @return \InvalidArgumentException|string
-     * @throws \RuntimeException
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \InvalidArgumentException
-     */
-    public function generatePath($route, $notifiable, Notification $notification = null)
-    {
-        if ($notifiable instanceof NotifiableInterface) {
-            $notifiableId = $this->notificationManager->getNotifiableEntity($notifiable)->getId();
-        } elseif ($notifiable instanceof NotifiableEntity) {
-            $notifiableId = $notifiable->getId();
-        } else {
-            throw new InvalidArgumentException('You must provide a NotifiableInterface or NotifiableEntity object');
-        }
-
-        switch ($route) {
-            case 'notification_list':
-                return $this->router->generate(
-                    'notification_list',
-                    array('notifiable' => $notifiableId)
-                );
-                break;
-            case 'notification_mark_as_seen':
-                if (!$notification) {
-                    throw new \InvalidArgumentException('You must provide a Notification Entity');
-                }
-
-                return $this->router->generate(
-                    'notification_mark_as_seen',
-                    array(
-                        'notifiable' => $notifiableId,
-                        'notification' => $notification->getId()
-                    )
-                );
-                break;
-            case 'notification_mark_as_unseen':
-                if (!$notification) {
-                    throw new \InvalidArgumentException('You must provide a Notification Entity');
-                }
-
-                return $this->router->generate(
-                    'notification_mark_as_unseen',
-                    array(
-                        'notifiable' => $notifiableId,
-                        'notification' => $notification->getId()
-                    )
-                );
-                break;
-            case 'notification_mark_all_as_seen':
-                return $this->router->generate('notification_mark_all_as_seen', array('notifiable' => $notifiableId));
-                break;
-            default:
-                return new \InvalidArgumentException('You must provide a valid route path. Paths availables : notification_list, notification_mark_as_seen, notification_mark_as_unseen, notification_mark_all_as_seen');
-        }
     }
 
     /**
