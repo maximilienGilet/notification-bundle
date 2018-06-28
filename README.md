@@ -19,9 +19,14 @@ An easy yet powerful notification bundle for Symfony
 Create and manage notifications in an efficient way.
 
 Symfony support :
-  * 2.7.x
-  * 2.8.x
+  * 2.7.x (bundle version 2.x)
+  * 2.8.x (bundle version 2.x)
   * 3.x
+  * 4.x
+
+## NOW SUPPORTS SYMFONY FLEX !
+
+Version 3.0 out now.
 
 ## Features
 
