@@ -95,7 +95,7 @@ class NotificationExtension extends Twig_Extension
         }
 
         // if the template option is set, use custom template
-        $template = array_key_exists('template', $options) ? $options['template'] : '@MgiletNotificationBundle/notification_list.html.twig';
+        $template = array_key_exists('template', $options) ? $options['template'] : '@MgiletNotification/notification_list.html.twig';
 
         return $this->twig->render($template,
             array(
