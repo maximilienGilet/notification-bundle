@@ -2,7 +2,7 @@
 MgiletNotificationBundle
 ========================
 ------------------------------------------------
-A simple Symfony 3 bundle for user notifications
+A simple Symfony 2/3/4 bundle for user notifications
 ------------------------------------------------
 
 Installation
@@ -25,6 +25,11 @@ Require the bundle with composer:
 .. code-block:: bash
 
     $ composer require mgilet/notification-bundle
+    
+
+
+Symfony 2.x only :
+~~~~~~~~~~~~~~~~~~
 
 Composer will install the bundle to your project's ``vendor/mgilet/notification-bundle`` directory.
 
@@ -99,17 +104,6 @@ To finish the installation, don't forget to update your schema:
 
     $ php bin/console doctrine:schema:update --force
 
-
-Set up the Twig alias:
-~~~~~~~~~~~~~~~~~~~~~~
-
-Under the ``twig`` configuration (config.yml or twig.yaml) add the following :
-
-.. code-block:: yaml
-    twig:
-        paths:
-            vendor/mgilet/notification-bundle/Resources/views: MgiletNotificationBundle
-            ...
 
 
 Enable the Notification controller :
