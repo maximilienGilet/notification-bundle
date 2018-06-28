@@ -88,10 +88,12 @@ class NotificationExtension extends Twig_Extension
      */
     public function renderNotifications(NotifiableInterface $notifiable, array $options)
     {
+        $order = array_key_exists('order', $options) ? $options['order'] : null;
+
         if ($options['seen']) {
-            $notifications = $this->notificationManager->getNotifications($notifiable);
+            $notifications = $this->notificationManager->getNotifications($notifiable, $order);
         } else {
-            $notifications = $this->notificationManager->getUnseenNotifications($notifiable);
+            $notifications = $this->notificationManager->getUnseenNotifications($notifiable, $order);
         }
 
         // if the template option is set, use custom template
