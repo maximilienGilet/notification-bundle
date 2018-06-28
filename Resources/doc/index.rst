@@ -100,6 +100,18 @@ To finish the installation, don't forget to update your schema:
     $ php bin/console doctrine:schema:update --force
 
 
+Set up the Twig alias:
+~~~~~~~~~~~~~~~~~~~~~~
+
+Under the ``twig`` configuration (config.yml or twig.yaml) add the following :
+
+.. code-block:: yaml
+    twig:
+        paths:
+            vendor/mgilet/notification-bundle/Resources/views: MgiletNotificationBundle
+            ...
+
+
 Enable the Notification controller :
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

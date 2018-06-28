@@ -38,36 +38,84 @@ class NotifiableNotificationRepository extends EntityRepository
     /**
      * Get all NotifiableNotifications for a notifiable
      *
-     * @param $notifiable_identifier
-     * @param $notifiable_class
+     * @param        $notifiable_identifier
+     * @param        $notifiable_class
+     * @param string $order
      *
      * @return NotifiableNotification[]
      */
-    public function findAllForNotifiable($notifiable_identifier, $notifiable_class)
+    public function findAllForNotifiable($notifiable_identifier, $notifiable_class, $order = 'DESC')
     {
         return $this->createQueryBuilder('nn')
             ->join('nn.notifiableEntity', 'ne')
+            ->join('nn.notification', 'no')
             ->where('ne.identifier = :identifier')
             ->andWhere('ne.class = :class')
             ->setParameter('identifier', $notifiable_identifier)
             ->setParameter('class', $notifiable_class)
+            ->orderBy('no.id', $order)
             ->getQuery()
             ->getResult()
         ;
     }
 
     /**
-     * @param $id
+     * @param           $identifier
+     * @param           $class
+     * @param bool|null $seen
+     * @param string    $order
+     *
+     * @return array
+     */
+    public function findAllByNotifiable($identifier, $class, $seen = null, $order = 'DESC')
+    {
+        $qb = $this->findAllByNotifiableQb($identifier, $class, $order);
+
+        if ($seen !== null) {
+            $whereSeen = $seen ? 1 : 0;
+            $qb
+                ->andWhere('nn.seen = :seen')
+                ->setParameter('seen', $whereSeen)
+            ;
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param        $identifier
+     * @param        $class
+     * @param string $order
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findAllForNotifiableIdQb($id)
+    public function findAllByNotifiableQb($identifier, $class, $order = 'DESC')
+    {
+        return $this->createQueryBuilder('nn')
+            ->addSelect('n')
+            ->join('nn.notification', 'n')
+            ->join('nn.notifiableEntity', 'ne')
+            ->where('ne.identifier = :identifier')
+            ->andWhere('ne.class = :class')
+            ->orderBy('n.id', $order)
+            ->setParameter('identifier', $identifier)
+            ->setParameter('class', $class)
+            ;
+    }
+
+    /**
+     * @param        $id
+     * @param string $order
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function findAllForNotifiableIdQb($id, $order = 'DESC')
     {
         return $this->createQueryBuilder('nn')
             ->addSelect('n')
             ->join('nn.notification', 'n')
             ->join('nn.notifiableEntity', 'ne')
             ->where('ne.id = :id')
+            ->orderBy('n.id', $order)
             ->setParameter('id', $id)
         ;
     }
@@ -75,13 +123,14 @@ class NotifiableNotificationRepository extends EntityRepository
     /**
      * Get the NotifiableNotifications for a NotifiableEntity id
      *
-     * @param $id
+     * @param        $id
+     * @param string $order
      *
      * @return NotifiableNotification[]
      */
-    public function findAllForNotifiableId($id)
+    public function findAllForNotifiableId($id, $order = 'DESC')
     {
-        return $this->findAllForNotifiableIdQb($id)->getQuery()->getResult();
+        return $this->findAllForNotifiableIdQb($id, $order)->getQuery()->getResult();
     }
 
     /**

@@ -9,10 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Class AbstractNotification
  * Notifications defined in your app must implement this class
  *
- * @ORM\Table(name="notification")
  * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotificationRepository")
  */
-class Notification
+class Notification implements \JsonSerializable
 {
 
     /**
@@ -192,5 +191,19 @@ class Notification
     public function __toString()
     {
         return $this->getSubject() . ' - ' . $this->getMessage();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id'      => $this->getId(),
+            'date'    => $this->getDate()->format(\DateTime::ISO8601),
+            'subject' => $this->getSubject(),
+            'message' => $this->getMessage(),
+            'link'    => $this->getLink()
+        ];
     }
 }

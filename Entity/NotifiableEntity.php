@@ -10,11 +10,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Class NotifiableEntity
  * @package Mgilet\NotificationBundle\Entity
  *
- * @ORM\Table(name="notifiable")
  * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotifiableRepository")
  * @UniqueEntity(fields={"identifier", "class"})
  */
-class NotifiableEntity
+class NotifiableEntity implements \JsonSerializable
 {
     /**
      * @var string $id
@@ -142,5 +141,17 @@ class NotifiableEntity
         }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id'         => $this->getId(),
+            'identifier' => $this->getIdentifier(),
+            'class'      => $this->getClass()
+        ];
     }
 }

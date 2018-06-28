@@ -11,7 +11,7 @@
     "symfony notification bundle simple"
   ],
   "require" : {
-    "symfony/framework-bundle": ">=2.7 <4",
+    "symfony/framework-bundle": "^2.7 || ^3.0 || ^4.0",
     "twig/twig": "*",
     "doctrine/doctrine-bundle": "*"
   },
@@ -20,7 +20,7 @@
   },
   "extra" : {
     "branch-alias" : {
-      "dev-master" : "2.0-dev"
+      "dev-master" : "3.0-dev"
     }
   }
 }
