@@ -139,22 +139,6 @@ Currently, 2 options are available :
     // custom template
     {{ mgilet_notification_render({ 'template': 'Path/to/my/template.html.twig'}) }}
 
-------------------
-
-**Interact with notifications**
-
-* ``mgilet_notification_generate_path``
-
-this function will help you using the bundle's controller. 
-
-It will generate links to the provided routes: 
-
-* ``list``
-* ``mark_as_seen``
-* ``mark_as_unseen`` 
-* ``mark_all_as_seen``
-
-
 
 Notification controller:
 ------------------------
