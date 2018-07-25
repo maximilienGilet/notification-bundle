@@ -117,7 +117,7 @@ In order to enable the controller, simply put this in your ``routing.yml`` :
 
     # routing.yml
 
-    mgilet_notifications:
+    mgilet_notification:
         resource: "@MgiletNotificationBundle/Controller/"
         prefix: /notifications
 
