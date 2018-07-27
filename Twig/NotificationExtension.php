@@ -90,10 +90,12 @@ class NotificationExtension extends Twig_Extension
     {
         $order = array_key_exists('order', $options) ? $options['order'] : null;
 
+        $limit = array_key_exists('limit', $options) ? $options['limit'] : null;
+
         if ($options['seen']) {
-            $notifications = $this->notificationManager->getNotifications($notifiable, $order);
+            $notifications = $this->notificationManager->getNotifications($notifiable, $order, $limit);
         } else {
-            $notifications = $this->notificationManager->getUnseenNotifications($notifiable, $order);
+            $notifications = $this->notificationManager->getUnseenNotifications($notifiable, $order, $limit);
         }
 
         // if the template option is set, use custom template
