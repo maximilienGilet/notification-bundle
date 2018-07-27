@@ -13,7 +13,7 @@ use Mgilet\NotificationBundle\Entity\NotifiableNotification;
  * @ORM\MappedSuperclass(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotificationRepository")
  * @package Mgilet\NotificationBundle\Model
  */
-class Notification implements \JsonSerializable
+abstract class Notification implements \JsonSerializable
 {
 
     /**
