@@ -10,7 +10,7 @@ use Mgilet\NotificationBundle\Entity\NotifiableNotification;
  * Class Notification
  * Notifications defined in your app must implement this class
  *
- * @ORM\MappedSuperclass
+ * @ORM\MappedSuperclass(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotificationRepository")
  * @package Mgilet\NotificationBundle\Model
  */
 class Notification implements \JsonSerializable
