@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Mgilet\NotificationBundle\Entity\NotifiableEntity;
 use Mgilet\NotificationBundle\Entity\NotifiableNotification;
 use Mgilet\NotificationBundle\Entity\Notification;
+use Mgilet\NotificationBundle\Entity\NotificationInterface;
 use Mgilet\NotificationBundle\Event\NotificationEvent;
 use Mgilet\NotificationBundle\MgiletNotificationEvents;
 use Mgilet\NotificationBundle\NotifiableDiscovery;
@@ -200,8 +201,8 @@ class NotificationManager
     }
 
     /**
-     * @param NotifiableInterface $notifiable
-     * @param Notification        $notification
+     * @param NotifiableInterface   $notifiable
+     * @param NotificationInterface $notification
      *
      * @return NotifiableNotification|null
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -210,7 +211,7 @@ class NotificationManager
      * @throws \InvalidArgumentException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function getNotifiableNotification(NotifiableInterface $notifiable, Notification $notification)
+    private function getNotifiableNotification(NotifiableInterface $notifiable, NotificationInterface $notification)
     {
         return $this->notifiableNotificationRepository->findOne(
             $notification->getId(),
@@ -330,7 +331,7 @@ class NotificationManager
      * Add a Notification to a list of NotifiableInterface entities
      *
      * @param NotifiableInterface[] $notifiables
-     * @param Notification          $notification
+     * @param NotificationInterface $notification
      * @param bool                  $flush
      *
      * @throws \Doctrine\ORM\OptimisticLockException
@@ -338,7 +339,7 @@ class NotificationManager
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function addNotification($notifiables, Notification $notification, $flush = false)
+    public function addNotification($notifiables, NotificationInterface $notification, $flush = false)
     {
         foreach ($notifiables as $notifiable) {
             $entity = $this->getNotifiableEntity($notifiable);
@@ -357,16 +358,16 @@ class NotificationManager
     /**
      * Deletes the link between a Notifiable and a Notification
      *
-     * @param array        $notifiables
-     * @param Notification $notification
-     * @param bool         $flush
+     * @param array                 $notifiables
+     * @param NotificationInterface $notification
+     * @param bool                  $flush
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function removeNotification(array $notifiables, Notification $notification, $flush = false)
+    public function removeNotification(array $notifiables, NotificationInterface $notification, $flush = false)
     {
         $repo = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
         foreach ($notifiables as $notifiable) {
@@ -387,14 +388,14 @@ class NotificationManager
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      *
      * @param bool         $flush
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteNotification(Notification $notification, $flush = false)
+    public function deleteNotification(NotificationInterface $notification, $flush = false)
     {
         $this->om->remove($notification);
         $this->flush($flush);
@@ -404,15 +405,15 @@ class NotificationManager
     }
 
     /**
-     * @param NotifiableInterface $notifiable
-     * @param Notification        $notification
-     * @param bool                $flush
+     * @param NotifiableInterface   $notifiable
+     * @param NotificationInterface $notification
+     * @param bool                  $flush
      *
      * @throws EntityNotFoundException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function markAsSeen(NotifiableInterface $notifiable, Notification $notification, $flush = false)
+    public function markAsSeen(NotifiableInterface $notifiable, NotificationInterface $notification, $flush = false)
     {
         $nn = $this->getNotifiableNotification($notifiable, $notification);
         if ($nn) {
@@ -426,15 +427,15 @@ class NotificationManager
     }
 
     /**
-     * @param NotifiableInterface $notifiable
-     * @param Notification        $notification
-     * @param bool                $flush
+     * @param NotifiableInterface   $notifiable
+     * @param NotificationInterface $notification
+     * @param bool                  $flush
      *
      * @throws EntityNotFoundException
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function markAsUnseen(NotifiableInterface $notifiable, Notification $notification, $flush = false)
+    public function markAsUnseen(NotifiableInterface $notifiable, NotificationInterface $notification, $flush = false)
     {
         $nn = $this->getNotifiableNotification($notifiable, $notification);
         if ($nn) {
@@ -470,8 +471,8 @@ class NotificationManager
     }
 
     /**
-     * @param NotifiableInterface $notifiable
-     * @param Notification        $notification
+     * @param NotifiableInterface   $notifiable
+     * @param NotificationInterface $notification
      *
      * @return bool
      * @throws \RuntimeException
@@ -479,7 +480,7 @@ class NotificationManager
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws EntityNotFoundException
      */
-    public function isSeen(NotifiableInterface $notifiable, Notification $notification)
+    public function isSeen(NotifiableInterface $notifiable, NotificationInterface $notification)
     {
         $nn = $this->getNotifiableNotification($notifiable, $notification);
         if ($nn) {
@@ -543,14 +544,14 @@ class NotificationManager
     }
 
     /**
-     * @param Notification $notification
-     * @param \DateTime    $dateTime
-     * @param bool         $flush
+     * @param NotificationInterface $notification
+     * @param \DateTime             $dateTime
+     * @param bool                  $flush
      *
-     * @return Notification
+     * @return NotificationInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setDate(Notification $notification, \DateTime $dateTime, $flush = false)
+    public function setDate(NotificationInterface $notification, \DateTime $dateTime, $flush = false)
     {
         $notification->setDate($dateTime);
         $this->flush($flush);
@@ -562,14 +563,14 @@ class NotificationManager
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      * @param string       $subject
      * @param bool         $flush
      *
-     * @return Notification
+     * @return NotificationInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setSubject(Notification $notification, $subject, $flush = false)
+    public function setSubject(NotificationInterface $notification, $subject, $flush = false)
     {
         $notification->setSubject($subject);
         $this->flush($flush);
@@ -581,14 +582,14 @@ class NotificationManager
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      * @param string       $subject
      * @param bool         $flush
      *
-     * @return Notification
+     * @return NotificationInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setMessage(Notification $notification, $subject, $flush = false)
+    public function setMessage(NotificationInterface $notification, $subject, $flush = false)
     {
         $notification->setSubject($subject);
         $this->flush($flush);
@@ -600,14 +601,14 @@ class NotificationManager
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      * @param string       $link
      * @param bool         $flush
      *
-     * @return Notification
+     * @return NotificationInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setLink(Notification $notification, $link, $flush = false)
+    public function setLink(NotificationInterface $notification, $link, $flush = false)
     {
         $notification->setLink($link);
         $this->flush($flush);
@@ -619,31 +620,31 @@ class NotificationManager
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      *
      * @return NotifiableInterface[]
      */
-    public function getNotifiables(Notification $notification)
+    public function getNotifiables(NotificationInterface $notification)
     {
         return $this->notifiableRepository->findAllByNotification($notification);
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      *
      * @return NotifiableInterface[]
      */
-    public function getUnseenNotifiables(Notification $notification)
+    public function getUnseenNotifiables(NotificationInterface $notification)
     {
         return $this->notifiableRepository->findAllByNotification($notification, true);
     }
 
     /**
-     * @param Notification $notification
+     * @param NotificationInterface $notification
      *
      * @return NotifiableInterface[]
      */
-    public function getSeenNotifiables(Notification $notification)
+    public function getSeenNotifiables(NotificationInterface $notification)
     {
         return $this->notifiableRepository->findAllByNotification($notification, false);
     }

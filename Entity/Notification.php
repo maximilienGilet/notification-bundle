@@ -11,7 +11,7 @@ use Mgilet\NotificationBundle\Model\Notification as NotificationModel;
  * @ORM\Entity
  * @package Mgilet\NotificationBundle\Entity
  */
-class Notification extends NotificationModel
+class Notification extends NotificationModel implements NotificationInterface
 {
 
 }
