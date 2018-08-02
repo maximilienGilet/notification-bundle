@@ -111,11 +111,11 @@ Enable the Notification controller :
 
 This bundle provides a controller named ``NotificationController``, which is used to do basic operations (mark as seen, display all...)
 
-In order to enable the controller, simply put this in your ``routing.yml`` :
+In order to enable the controller, simply put this in your ``routing.yml`` (config/routes.yaml for Symfony 4) :
 
 .. code-block:: yaml
 
-    # routing.yml
+    # routing.yml / routes.yaml
 
     mgilet_notification:
         resource: "@MgiletNotificationBundle/Controller/"
