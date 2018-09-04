@@ -65,10 +65,12 @@ class NotifiableNotificationRepository extends EntityRepository
      * @param bool|null $seen
      * @param string    $order
      * @param null|int  $limit
+     * @param null|int  $offset
      *
      * @return array
      */
-    public function findAllByNotifiable($identifier, $class, $seen = null, $order = 'DESC', $limit = null)
+    public function findAllByNotifiable($identifier, $class, $seen = null, $order = 'DESC', $limit = null,
+                                        $offset = null)
     {
         $qb = $this->findAllByNotifiableQb($identifier, $class, $order);
 
@@ -82,6 +84,9 @@ class NotifiableNotificationRepository extends EntityRepository
 
         if (null !== $limit) {
             $qb->setMaxResults($limit);
+        }
+        if (null !== $offset) {
+            $qb->setFirstResult($offset);
         }
 
         return $qb->getQuery()->getResult();
