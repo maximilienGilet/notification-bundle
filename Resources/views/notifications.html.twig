@@ -1,8 +1,9 @@
 Notifications :
-<form action="{{ mgilet_notification_generate_path('notification_mark_all_as_seen', notificationList|first.notifiableEntity) }}"
-      method="post">
-    <button type="submit">Mark all as seen</button>
-</form>
+{% if notificationList|length > 0 %}
+    <form action="{{ mgilet_notification_generate_path('notification_mark_all_as_seen', notificationList|first.notifiableEntity) }}" method="post">
+        <button type="submit">Mark all as seen</button>
+    </form>
+{% endif %}
 <ul>
     {% for item in notificationList %}
         <li>
