@@ -4,7 +4,7 @@ namespace Mgilet\NotificationBundle\Twig;
 
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Mgilet\NotificationBundle\Entity\NotifiableEntity;
-use Mgilet\NotificationBundle\Entity\Notification;
+use Mgilet\NotificationBundle\Entity\NotificationInterface;
 use Mgilet\NotificationBundle\Manager\NotificationManager;
 use Mgilet\NotificationBundle\NotifiableInterface;
 use Symfony\Component\Routing\Router;
@@ -144,9 +144,9 @@ class NotificationExtension extends Twig_Extension
     /**
      * Returns the path to the NotificationController action
      *
-     * @param                   $route
-     * @param                   $notifiable
-     * @param Notification|null $notification
+     * @param                            $route
+     * @param                            $notifiable
+     * @param NotificationInterface|null $notification
      *
      * @return \InvalidArgumentException|string
      * @throws \RuntimeException
@@ -155,7 +155,7 @@ class NotificationExtension extends Twig_Extension
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \InvalidArgumentException
      */
-    public function generatePath($route, $notifiable, Notification $notification = null)
+    public function generatePath($route, $notifiable, NotificationInterface $notification = null)
     {
         if ($notifiable instanceof NotifiableInterface) {
             $notifiableId = $this->notificationManager->getNotifiableEntity($notifiable)->getId();

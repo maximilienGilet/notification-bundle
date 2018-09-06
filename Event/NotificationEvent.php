@@ -2,7 +2,7 @@
 
 namespace Mgilet\NotificationBundle\Event;
 
-use Mgilet\NotificationBundle\Entity\Notification;
+use Mgilet\NotificationBundle\Entity\NotificationInterface;
 use Mgilet\NotificationBundle\NotifiableInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -14,17 +14,17 @@ class NotificationEvent extends Event
     /**
      * NotificationEvent constructor.
      *
-     * @param Notification             $notification
+     * @param NotificationInterface    $notification
      * @param NotifiableInterface|null $notifiable
      */
-    public function __construct(Notification $notification, NotifiableInterface $notifiable = null)
+    public function __construct(NotificationInterface $notification, NotifiableInterface $notifiable = null)
     {
         $this->notification = $notification;
         $this->notifiable = $notifiable;
     }
 
     /**
-     * @return Notification
+     * @return NotificationInterface
      */
     public function getNotification()
     {
