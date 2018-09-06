@@ -247,48 +247,63 @@ class NotificationManager
     /**
      * @param NotifiableInterface $notifiable
      * @param string              $order
+     * @param null|int            $limit
+     * @param null|int            $offset
      *
      * @return array
      */
-    public function getNotifications(NotifiableInterface $notifiable, $order = 'DESC')
+    public function getNotifications(NotifiableInterface $notifiable, $order = 'DESC', $limit = null,
+                                     $offset = null)
     {
         return $this->notifiableNotificationRepository->findAllByNotifiable(
             $this->generateIdentifier($notifiable),
             ClassUtils::getRealClass(get_class($notifiable)),
             null,
-            $order
+            $order,
+            $limit,
+            $offset
         );
     }
 
     /**
      * @param NotifiableInterface $notifiable
      * @param string              $order
+     * @param null|int            $limit
+     * @param null|int            $offset
      *
      * @return array
      */
-    public function getUnseenNotifications(NotifiableInterface $notifiable, $order = 'DESC')
+    public function getUnseenNotifications(NotifiableInterface $notifiable, $order = 'DESC', $limit = null,
+                                           $offset = null)
     {
         return $this->notifiableNotificationRepository->findAllByNotifiable(
             $this->generateIdentifier($notifiable),
             ClassUtils::getRealClass(get_class($notifiable)),
             false,
-            $order
+            $order,
+            $limit,
+            $offset
         );
     }
 
     /**
      * @param NotifiableInterface $notifiable
      * @param string              $order
+     * @param null|int            $limit
+     * @param null|int            $offset
      *
      * @return array
      */
-    public function getSeenNotifications(NotifiableInterface $notifiable, $order = 'DESC')
+    public function getSeenNotifications(NotifiableInterface $notifiable, $order = 'DESC', $limit = null,
+                                         $offset = null)
     {
         return $this->notifiableNotificationRepository->findAllByNotifiable(
             $this->generateIdentifier($notifiable),
             ClassUtils::getRealClass(get_class($notifiable)),
             true,
-            $order
+            $order,
+            $limit,
+            $offset
         );
     }
 
