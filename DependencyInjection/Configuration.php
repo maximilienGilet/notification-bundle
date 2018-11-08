@@ -21,7 +21,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode->children()
             ->scalarNode('notification_class')
-                ->isRequired()
                 ->cannotBeEmpty()
                 ->defaultValue('Mgilet\NotificationBundle\Entity\Notification')
             ->end()
