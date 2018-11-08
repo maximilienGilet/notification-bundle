@@ -17,17 +17,13 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('mgilet');
+        $rootNode = $treeBuilder->root('mgilet_notification');
 
         $rootNode->children()
-            ->arrayNode('notification')
-                ->children()
-                    ->scalarNode('notification_class')
-                        ->isRequired()
-                        ->cannotBeEmpty()
-                        ->defaultValue('Mgilet\NotificationBundle\Entity\Notification')
-                    ->end()
-                ->end()
+            ->scalarNode('notification_class')
+                ->isRequired()
+                ->cannotBeEmpty()
+                ->defaultValue('Mgilet\NotificationBundle\Entity\Notification')
             ->end()
         ->end();
 

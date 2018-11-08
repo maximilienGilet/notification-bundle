@@ -31,7 +31,7 @@ class MgiletNotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         foreach ($config as $key => $value) {
-            $container->setParameter('mgilet.'.$key, $value);
+            $container->setParameter('mgilet_notification.'.$key, $value);
         }
     }
 }
