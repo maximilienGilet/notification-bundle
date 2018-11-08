@@ -13,6 +13,13 @@ interface NotificationInterface
 {
 
     /**
+     * Defines the default entity used for the notification
+     *
+     * @var string
+     */
+    const DEFAULT_NOTIFICATION_ENTITY_CLASS = 'Mgilet\NotificationBundle\Entity\Notification';
+
+    /**
      * @return int Notification Id
      */
     public function getId();
