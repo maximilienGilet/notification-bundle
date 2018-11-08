@@ -10,6 +10,7 @@ namespace Mgilet\NotificationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Mgilet\NotificationBundle\Entity\NotificationInterface;
 
 
 class Configuration implements ConfigurationInterface
@@ -22,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->scalarNode('notification_class')
                 ->cannotBeEmpty()
-                ->defaultValue('Mgilet\NotificationBundle\Entity\Notification')
+                ->defaultValue(NotificationInterface::DEFAULT_NOTIFICATION_ENTITY_CLASS)
             ->end()
         ->end();
 
