@@ -330,7 +330,7 @@ class NotificationManager
      */
     public function createNotification($subject, $message = null, $link = null)
     {
-        $notificationClass = $container->getParameter('mgilet_notification.notification_class');
+        $notificationClass = $this->container->getParameter('mgilet_notification.notification_class');
         $notification = new $notificationClass();
         $notification
             ->setSubject($subject)
