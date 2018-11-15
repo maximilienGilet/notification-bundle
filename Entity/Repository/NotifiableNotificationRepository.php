@@ -53,7 +53,7 @@ class NotifiableNotificationRepository extends EntityRepository
             ->andWhere('ne.class = :class')
             ->setParameter('identifier', $notifiable_identifier)
             ->setParameter('class', $notifiable_class)
-            ->orderBy('no.id', $order)
+            ->orderBy('no.date', $order)
             ->getQuery()
             ->getResult()
         ;
@@ -107,7 +107,7 @@ class NotifiableNotificationRepository extends EntityRepository
             ->join('nn.notifiableEntity', 'ne')
             ->where('ne.identifier = :identifier')
             ->andWhere('ne.class = :class')
-            ->orderBy('n.id', $order)
+            ->orderBy('n.date', $order)
             ->setParameter('identifier', $identifier)
             ->setParameter('class', $class)
             ;
@@ -126,7 +126,7 @@ class NotifiableNotificationRepository extends EntityRepository
             ->join('nn.notification', 'n')
             ->join('nn.notifiableEntity', 'ne')
             ->where('ne.id = :id')
-            ->orderBy('n.id', $order)
+            ->orderBy('n.date', $order)
             ->setParameter('id', $id)
         ;
     }
@@ -150,7 +150,7 @@ class NotifiableNotificationRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function getNotificationCoundQb($notifiable_identifier, $notifiable_class)
+    protected function getNotificationCountQb($notifiable_identifier, $notifiable_class)
     {
         return $this->createQueryBuilder('nn')
             ->select('COUNT(nn.id)')
@@ -180,7 +180,7 @@ class NotifiableNotificationRepository extends EntityRepository
      */
     public function getNotificationCount($notifiable_identifier, $notifiable_class, $seen = null)
     {
-        $qb = $this->getNotificationCoundQb($notifiable_identifier, $notifiable_class);
+        $qb = $this->getNotificationCountQb($notifiable_identifier, $notifiable_class);
 
         if ($seen !== null) {
             $whereSeen = $seen ? 1 : 0;
