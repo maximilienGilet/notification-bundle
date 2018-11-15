@@ -202,6 +202,19 @@ class NotificationExtension extends Twig_Extension
             case 'notification_mark_all_as_seen':
                 return $this->router->generate('notification_mark_all_as_seen', array('notifiable' => $notifiableId));
                 break;
+            case 'notification_remove':
+                if (!$notification) {
+                    throw new \InvalidArgumentException('You must provide a Notification Entity');
+                }
+
+                return $this->router->generate(
+                    'notification_remove',
+                    array(
+                        'notifiable' => $notifiableId,
+                        'notification' => $notification->getId()
+                    )
+                );
+                break;
             default:
                 return new \InvalidArgumentException('You must provide a valid route path. Paths availables : notification_list, notification_mark_as_seen, notification_mark_as_unseen, notification_mark_all_as_seen');
         }

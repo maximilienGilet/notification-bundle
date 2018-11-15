@@ -113,4 +113,29 @@ class NotificationController extends Controller
 
         return new JsonResponse(true);
     }
+
+    /**
+     * Remove a notification for a NotifiableEntity
+     *
+     * @Route("/{notifiable}/remove_notification/{notification}", name="notification_remove")
+     * @Method("POST")
+     * @param $notifiable
+     * @param $notification
+     *
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     */
+    public function removeNotificationAction($notifiable, $notification)
+    {
+
+        $manager = $this->get('mgilet.notification');
+
+        $manager->removeNotification( [$manager->getNotifiableInterface($manager->getNotifiableEntityById($notifiable))],
+            $manager->getNotification($notification));
+        return new JsonResponse(true);
+    }
+
 }
