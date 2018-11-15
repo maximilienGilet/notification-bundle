@@ -598,15 +598,15 @@ class NotificationManager
 
     /**
      * @param NotificationInterface $notification
-     * @param string       $subject
+     * @param string       $message
      * @param bool         $flush
      *
      * @return NotificationInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function setMessage(NotificationInterface $notification, $subject, $flush = false)
+    public function setMessage(NotificationInterface $notification, $message, $flush = false)
     {
-        $notification->setSubject($subject);
+        $notification->setMessage($message);
         $this->flush($flush);
 
         $event = new NotificationEvent($notification);
