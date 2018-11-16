@@ -353,6 +353,7 @@ class NotificationManager
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     * @throws \Doctrine\DBAL\Exception\UniqueConstraintViolationException
      */
     public function addNotification($notifiables, NotificationInterface $notification, $flush = false)
     {
