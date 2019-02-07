@@ -44,21 +44,15 @@ Notice: Only Doctrine ORM is supported for now.
 
 ## Installation & usage
 
-### Installation
-
 This bundle is available on [packagist](https://packagist.org/packages/mgilet/notification-bundle).
 
-First :
+Add notification-bundle to your project :
 
 ```bash
 $ composer require mgilet/notification-bundle
 ```
 
-
-
 **See [documentation](Resources/doc/index.rst) for next steps**
-
-
 
 ### Basic usage
 
@@ -70,12 +64,12 @@ class MyController extends Controller
 
     public function sendNotification(Request $request)
     {
-       $manager = $this->get('mgilet.notification');
-      $notif = $manager->createNotification('Hello world !');
+      $manager = $this->get('mgilet.notification');
+      $notif = $manager->createNotification('Hello world!');
       $notif->setMessage('This a notification.');
-      $notif->setLink('http://symfony.com/');
+      $notif->setLink('https://symfony.com/');
       // or the one-line method :
-      // $manager->createNotification('Notification subject','Some random text','http://google.fr');
+      // $manager->createNotification('Notification subject', 'Some random text', 'https://google.fr');
 
       // you can add a notification to a list of entities
       // the third parameter `$flush` allows you to directly flush the entities
@@ -84,12 +78,6 @@ class MyController extends Controller
       ...
     }
 ```
-
-
-
-### **See [HERE](Resources/doc/index.rst) for more**
-
-
 
 ## Translations
 
