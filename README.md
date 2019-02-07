@@ -69,7 +69,7 @@ class MyController extends Controller
       $notif->setMessage('This a notification.');
       $notif->setLink('https://symfony.com/');
       // or the one-line method :
-      // $manager->createNotification('Notification subject', 'Some random text', 'https://google.fr');
+      // $manager->createNotification('Notification subject', 'Some random text', 'https://google.fr/');
 
       // you can add a notification to a list of entities
       // the third parameter `$flush` allows you to directly flush the entities
