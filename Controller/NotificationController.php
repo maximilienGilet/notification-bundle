@@ -4,7 +4,6 @@ namespace Mgilet\NotificationBundle\Controller;
 
 use Mgilet\NotificationBundle\Entity\Notification;
 use Mgilet\NotificationBundle\NotifiableInterface;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
