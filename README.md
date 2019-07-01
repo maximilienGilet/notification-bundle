@@ -74,14 +74,14 @@ class MyController extends Controller
       // you can add a notification to a list of entities
       // the third parameter `$flush` allows you to directly flush the entities
       $manager->addNotification(array($this->getUser()), $notif, true);
-      
+
       ...
     }
 ```
 
 ## Translations
 
-For now this bundle is only translated to de, en, es, fa, fr, it, nl.
+For now this bundle is only translated to de, en, es, fa, fr, it, nl, pt_BR.
 
 Help me improve this by submitting your translations.
 
