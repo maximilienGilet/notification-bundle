@@ -142,7 +142,7 @@ class NotificationManager
             $identifierValues[] = $notifiable->$method();
         }
 
-        return implode('-', $identifierValues);
+        return implode(';', $identifierValues);
     }
 
     /**
