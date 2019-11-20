@@ -4,8 +4,7 @@ namespace Mgilet\NotificationBundle\Controller;
 
 use Mgilet\NotificationBundle\Entity\Notification;
 use Mgilet\NotificationBundle\NotifiableInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -19,8 +18,7 @@ class NotificationController extends Controller
     /**
      * List of all notifications
      *
-     * @Route("/{notifiable}", name="notification_list")
-     * @Method("GET")
+     * @Route("/{notifiable}", name="notification_list", methods={"GET"})
      * @param NotifiableInterface $notifiable
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -38,8 +36,7 @@ class NotificationController extends Controller
     /**
      * Set a Notification as seen
      *
-     * @Route("/{notifiable}/mark_as_seen/{notification}", name="notification_mark_as_seen")
-     * @Method("POST")
+     * @Route("/{notifiable}/mark_as_seen/{notification}", name="notification_mark_as_seen", methods={"POST"})
      * @param int           $notifiable
      * @param Notification  $notification
      *
@@ -66,8 +63,7 @@ class NotificationController extends Controller
     /**
      * Set a Notification as unseen
      *
-     * @Route("/{notifiable}/mark_as_unseen/{notification}", name="notification_mark_as_unseen")
-     * @Method("POST")
+     * @Route("/{notifiable}/mark_as_unseen/{notification}", name="notification_mark_as_unseen", methods={"POST"})
      * @param $notifiable
      * @param $notification
      *
@@ -94,8 +90,7 @@ class NotificationController extends Controller
     /**
      * Set all Notifications for a User as seen
      *
-     * @Route("/{notifiable}/markAllAsSeen", name="notification_mark_all_as_seen")
-     * @Method("POST")
+     * @Route("/{notifiable}/markAllAsSeen", name="notification_mark_all_as_seen", methods={"POST"})
      * @param $notifiable
      *
      * @return JsonResponse
