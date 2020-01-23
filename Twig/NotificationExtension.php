@@ -9,12 +9,14 @@ use Mgilet\NotificationBundle\Manager\NotificationManager;
 use Mgilet\NotificationBundle\NotifiableInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Twig_Extension;
+//use Twig_Extension;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Twig extension to display notifications
  **/
-class NotificationExtension extends Twig_Extension
+class NotificationExtension extends AbstractExtension
 {
     protected $notificationManager;
     protected $storage;
@@ -42,18 +44,10 @@ class NotificationExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('mgilet_notification_render', array($this, 'render'), array(
-                'is_safe' => array('html')
-            )),
-            new \Twig_SimpleFunction('mgilet_notification_count', array($this, 'countNotifications'), array(
-                'is_safe' => array('html')
-            )),
-            new \Twig_SimpleFunction('mgilet_notification_unseen_count', array($this, 'countUnseenNotifications'), array(
-                'is_safe' => array('html')
-            )),
-            new \Twig_SimpleFunction('mgilet_notification_generate_path', array($this, 'generatePath'), array(
-                'is_safe' => array('html')
-            ))
+            new TwigFunction('mgilet_notification_render', [$this, 'render']),
+            new TwigFunction('mgilet_notification_count', [$this, 'countNotifications']),
+            new TwigFunction('mgilet_notification_unseen_count', [$this, 'countUnseenNotifications']),
+            new TwigFunction('mgilet_notification_generate_path', [$this, 'generatePath'])
         );
     }
 
