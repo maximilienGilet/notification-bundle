@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class NotificationController extends Controller
 {
-
     /**
      * List of all notifications
      *
