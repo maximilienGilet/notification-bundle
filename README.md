@@ -81,7 +81,7 @@ class MyController extends Controller
 
 ## Translations
 
-For now this bundle is only translated to de, en, es, fa, fr, it, nl, pt_BR.
+For now this bundle is only translated to de, en, es, fa, fr, it, nl, pt_BR, pl.
 
 Help me improve this by submitting your translations.
 
