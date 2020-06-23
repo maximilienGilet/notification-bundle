@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package Mgilet\NotificationBundle\Entity
  *
  * @ORM\Entity(repositoryClass="Mgilet\NotificationBundle\Entity\Repository\NotifiableNotificationRepository")
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="notified_unique",columns={"notifiable_entity_id", "notification_id"})})
  *
  */
 class NotifiableNotification implements \JsonSerializable
@@ -31,6 +32,7 @@ class NotifiableNotification implements \JsonSerializable
     /**
      * @var Notification
      * @ORM\ManyToOne(targetEntity="Mgilet\NotificationBundle\Entity\Notification", inversedBy="notifiableNotifications", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $notification;
 

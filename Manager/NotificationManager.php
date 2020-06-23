@@ -353,6 +353,7 @@ class NotificationManager
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     * @throws \Doctrine\DBAL\Exception\UniqueConstraintViolationException
      */
     public function addNotification($notifiables, NotificationInterface $notification, $flush = false)
     {
@@ -375,16 +376,16 @@ class NotificationManager
      *
      * @param array                 $notifiables
      * @param NotificationInterface $notification
-     * @param bool                  $flush
      *
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function removeNotification(array $notifiables, NotificationInterface $notification, $flush = false)
+    public function removeNotification(array $notifiables, NotificationInterface $notification)
     {
         $repo = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
+
         foreach ($notifiables as $notifiable) {
             $repo->createQueryBuilder('nn')
                 ->delete()
@@ -399,7 +400,19 @@ class NotificationManager
             $this->dispatcher->dispatch(MgiletNotificationEvents::REMOVED, $event);
         }
 
-        $this->flush($flush);
+        // Counts the Notifiable that still links the Notifications
+        $notifiableNumbers = $repo->createQueryBuilder('nn')
+            ->select('COUNT(nn.notification)')
+            ->where('nn.notification = :notification')
+            ->groupBy('nn.notification')
+            ->setParameter('notification', $notification)
+            ->getQuery()->execute();
+        // If there's no Notifiable linked to the Notification
+        // then deletes it
+        if(empty($notifiableNumbers))
+        {
+            $this->deleteNotification($notification, true);
+        }
     }
 
     /**
