@@ -1,5 +1,4 @@
 services:
-
     mgilet.notification:
         class: Mgilet\NotificationBundle\Manager\NotificationManager
         arguments: ["@service_container", '@mgilet.notifiable_discovery']
@@ -9,7 +8,6 @@ services:
         class: Mgilet\NotificationBundle\NotifiableDiscovery
         arguments: [ '@doctrine.orm.entity_manager', '@annotation_reader']
         public: false
-
 
     mgilet.twig_extension:
             class: Mgilet\NotificationBundle\Twig\NotificationExtension
