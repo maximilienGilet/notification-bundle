@@ -397,8 +397,10 @@ class NotificationManager
 
             $event = new NotificationEvent($notification, $notifiable);
             $this->dispatcher->dispatch(MgiletNotificationEvents::REMOVED, $event);
+            $this->flush($flush);
         }
 
+        $this->deleteNotification($notification);
         $this->flush($flush);
     }
 
