@@ -44,10 +44,10 @@ class NotificationExtension extends AbstractExtension
     public function getFunctions()
     {
         return array(
-            new TwigFunction('mgilet_notification_render', [$this, 'render']),
-            new TwigFunction('mgilet_notification_count', [$this, 'countNotifications']),
-            new TwigFunction('mgilet_notification_unseen_count', [$this, 'countUnseenNotifications']),
-            new TwigFunction('mgilet_notification_generate_path', [$this, 'generatePath'])
+            new TwigFunction('mgilet_notification_render', [$this, 'render'], ['is_safe' => ['html']]),
+            new TwigFunction('mgilet_notification_count', [$this, 'countNotifications'], ['is_safe' => ['html']]),
+            new TwigFunction('mgilet_notification_unseen_count', [$this, 'countUnseenNotifications'], ['is_safe' => ['html']]),
+            new TwigFunction('mgilet_notification_generate_path', [$this, 'generatePath'], ['is_safe' => ['html']])
         );
     }
 
