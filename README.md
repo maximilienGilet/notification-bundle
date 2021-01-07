@@ -40,6 +40,23 @@ Version 3.0 out now.
 
 Notice: Only Doctrine ORM is supported for now.
 
+## Upgrade from 3.x
+
+### Custom Notification entity usage
+
+If you use a custom Notification entitiy you must remove the `resolve_target_entities` directive from the doctrine configuration and add a configuration file.
+
+### Example
+
+After adding the customized notification class as in #39 just add a configuration file
+
+`config/packages/mgilet_notification.yaml`
+
+```yaml
+mgilet_notification:
+  notification_class: App\Entity\MyCustomNotification
+```
+
 
 
 ## Installation & usage
