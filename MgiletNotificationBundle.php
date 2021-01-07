@@ -2,7 +2,10 @@
 
 namespace Mgilet\NotificationBundle;
 
+use Mgilet\NotificationBundle\DependencyInjection\Compiler\ResolveTargetEntitiesPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
  * MgiletNotificationBundle
@@ -15,4 +18,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class MgiletNotificationBundle extends Bundle
 {
+    public function build(ContainerBuilder $container){
+        parent::build($container);
+        $container->addCompilerPass(new ResolveTargetEntitiesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
+    }
 }
