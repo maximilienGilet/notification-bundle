@@ -33,14 +33,15 @@ To override the `notification` entity (eg to add fields), you just have to creat
         }
 
 
-Next, the only other step is to configure Doctrine to use your new entity :
+Next, the only other step is to configure the bundle to use your new entity :
+
+**config/packages/mgilet_notification.yaml**
 
 .. code-block:: yaml
 
-        doctrine:
-          orm:
-            resolve_target_entities:
-              Mgilet\NotificationBundle\Entity\Notification: App\Entity\Notification
+        mgilet_notification:
+                notification_class: App\Entity\MyCustomNotification
+
 
 
 Go further
