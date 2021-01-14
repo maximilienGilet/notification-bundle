@@ -31,12 +31,14 @@ class NotifiableNotification implements \JsonSerializable
     /**
      * @var Notification
      * @ORM\ManyToOne(targetEntity="Mgilet\NotificationBundle\Entity\Notification", inversedBy="notifiableNotifications", cascade={"persist"})
+     * @ORM\JoinColumn(name="notification_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $notification;
 
     /**
      * @var NotifiableEntity
      * @ORM\ManyToOne(targetEntity="Mgilet\NotificationBundle\Entity\NotifiableEntity", inversedBy="notifiableNotifications", cascade={"persist"})
+     * @ORM\JoinColumn(name="notifiable_entity_id", referencedColumnName="id", onDelete="CASCADE")
      *
      */
     protected $notifiableEntity;
