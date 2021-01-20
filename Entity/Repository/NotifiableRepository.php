@@ -22,7 +22,7 @@ class NotifiableRepository extends EntityRepository
         $qb = $this->createQueryBuilder('n')->select('e')->from($notifiableEntity->getClass(), 'e');
 
         // map the identifier(s) to the value(s)
-        $identifiers = explode('-', $notifiableEntity->getIdentifier());
+        $identifiers = explode(';', $notifiableEntity->getIdentifier());
         foreach ($mapping as $key => $identifier) {
             $qb->andWhere(sprintf('e.%s = :%s', $identifier, $identifier));
             $qb->setParameter($identifier, $identifiers[$key]);
