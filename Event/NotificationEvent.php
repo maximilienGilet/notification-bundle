@@ -4,7 +4,7 @@ namespace Mgilet\NotificationBundle\Event;
 
 use Mgilet\NotificationBundle\Entity\NotificationInterface;
 use Mgilet\NotificationBundle\NotifiableInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class NotificationEvent extends Event
 {
