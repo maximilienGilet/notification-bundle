@@ -14,6 +14,10 @@ use Mgilet\NotificationBundle\Entity\NotificationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * {@inheritdoc}
+     * @return TreeBuilder
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('mgilet_notification');

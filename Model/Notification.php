@@ -197,6 +197,7 @@ abstract class Notification implements \JsonSerializable
 
     /**
      * {@inheritdoc}
+     * @return mixed
      */
     public function jsonSerialize()
     {

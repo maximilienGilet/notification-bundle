@@ -118,6 +118,7 @@ class NotifiableNotification implements \JsonSerializable
 
     /**
      * {@inheritdoc}
+     * @return mixed
      */
     public function jsonSerialize()
     {
