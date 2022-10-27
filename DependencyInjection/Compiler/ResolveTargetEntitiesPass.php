@@ -11,7 +11,6 @@ namespace Mgilet\NotificationBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Mgilet\NotificationBundle\Entity\NotificationInterface;
-use Symfony\Component\Debug\Exception\ClassNotFoundException;
 use Doctrine\ORM\Version;
 
 class ResolveTargetEntitiesPass implements CompilerPassInterface
@@ -30,7 +29,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
         }
         // Throws exception if the class isn't found
         if (!class_exists($notificationEntityClass)) {
-            throw new ClassNotFoundException(sprintf("Can't find class %s ", $notificationEntityClass));
+            throw new \ErrorException(sprintf("Can't find class %s ", $notificationEntityClass));
         }
 
         // Get the doctrine ResolveTargetEntityListener

@@ -15,3 +15,8 @@ services:
             public: false
             tags:
                 - { name: twig.extension }
+
+    Mgilet\NotificationBundle\Controller\NotificationController:
+        autoconfigure: true
+        calls:
+            - [ setContainer, [ '@service_container' ] ]
