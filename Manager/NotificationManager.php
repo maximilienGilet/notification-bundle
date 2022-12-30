@@ -41,9 +41,9 @@ class NotificationManager
         $this->discovery = $discovery;
         $this->om = $container->get('doctrine.orm.entity_manager');
         $this->dispatcher = $container->get('event_dispatcher');
-        $this->notifiableRepository = $this->om->getRepository('MgiletNotificationBundle:NotifiableEntity');
-        $this->notificationRepository = $this->om->getRepository('MgiletNotificationBundle:Notification');
-        $this->notifiableNotificationRepository = $this->om->getRepository('MgiletNotificationBundle:NotifiableNotification');
+        $this->notifiableRepository = $this->om->getRepository(NotifiableEntity::class);
+        $this->notificationRepository = $this->om->getRepository(Notification::class);
+        $this->notifiableNotificationRepository = $this->om->getRepository(NotifiableNotification::class);
     }
 
     /**
